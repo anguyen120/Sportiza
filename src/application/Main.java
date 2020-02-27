@@ -1,29 +1,37 @@
 package application;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.File;
 
 public class Main extends Application {
+  public static void main(String[] args) {
+    launch(args);
+  }
 
-  @Override
   public void start(Stage primaryStage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("application.fxml"));
-    primaryStage.setTitle("Sportiza");
-    // TODO: Fix aspect ratio 4k screens 
+    StackPane root = new StackPane();
+
+    WebView webView = new WebView();
+    File html = new File("html/index.html");
+    webView.getEngine().load(html.toURI().toString());
+
+    root.getChildren().add(webView);
+
+    // TODO: Fix aspect ratio 4k screens
     GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     int width = gd.getDisplayMode().getWidth();
     int height = gd.getDisplayMode().getHeight();
-    primaryStage.setScene(new Scene(root, width, height));
+
+    Scene scene = new Scene(root, width, height);
+
+    primaryStage.setTitle("Sportiza");
+    primaryStage.setScene(scene);
     primaryStage.show();
-  }
-
-
-  public static void main(String[] args) {
-    launch(args);
   }
 }
