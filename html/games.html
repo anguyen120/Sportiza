@@ -36,19 +36,48 @@
     <section class="wrapper style1 align-left fullscreen">
         <div class="inner medium">
             <h2>GAMES</h2>
+            <p>(at least one field required)</p>
             <form action="#" method="post">
                 <div class="fields">
                     <div class="field half">
-                        <label for="name">First name</label>
-                        <input id="first_name" name="first_name" type="text" value=""/>
+                        <label for="home_teams">Home team</label>
+                        <select id="home_teams" name="home_teams">
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
                     </div>
                     <div class="field half">
-                        <label for="email">Last name</label>
-                        <input id="last_name" name="last_name" type="email" value=""/>
+                        <label for="visit_teams">Visit team</label>
+                        <select id="visit_teams" name="visit_teams">
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
                     </div>
-                    <div class="field">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" rows="6"></textarea>
+                    <div class="field half">
+                        <label for="conference">Conference</label>
+                        <select id="conference" name="conference">
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
+                    </div>
+                    <div class="field half">
+                        <label for="season">Season</label>
+                        <select id="season" name="season">
+                            <option value=""></option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
                     </div>
                 </div>
                 <ul class="actions">
