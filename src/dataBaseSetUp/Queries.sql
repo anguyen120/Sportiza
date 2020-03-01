@@ -1,0 +1,1 @@
+SELECT * FROM players WHERE players."First Name" = 'Steven';
