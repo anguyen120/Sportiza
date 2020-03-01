@@ -10,6 +10,11 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <link href="assets/css/main.css" rel="stylesheet"/>
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <noscript>
         <link href="assets/css/noscript.css" rel="stylesheet"/>
     </noscript>
@@ -36,8 +41,7 @@
     <section class="wrapper style1 align-left fullscreen">
         <div class="inner medium">
             <h2>PLAYERS</h2>
-            <p>(at least one field required)</p>
-            <form action="#" method="post">
+            <form action="players_list.html" id="players_form" method="post">
                 <div class="fields">
                     <div class="field half">
                         <label for="first_name">First name</label>
@@ -49,15 +53,9 @@
                     </div>
                     <div class="field half">
                         <label for="team">Team</label>
-                        <select id="team" name="team">
-                            <option value=""></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <input id="team" name="team" type="text" value="">
                     </div>
-                    <div class="field half">
+                    <div class="field half ui-widget">
                         <label for="uniform_number">Uniform number</label>
                         <input id="uniform_number" name="uniform_number" type="text" value=""/>
                     </div>
@@ -76,13 +74,13 @@
 
 
 <!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery.scrollex.min.js"></script>
 <script src="assets/js/jquery.scrolly.min.js"></script>
 <script src="assets/js/browser.min.js"></script>
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/players_form.js"></script>
 
 </body>
 </html>
