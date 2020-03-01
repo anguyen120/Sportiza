@@ -1,12 +1,14 @@
 package application;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.File;
 
 public class Main extends Application {
@@ -14,7 +16,7 @@ public class Main extends Application {
     launch(args);
   }
 
-  public void start(Stage primaryStage) throws Exception {
+  public void start(Stage primaryStage) {
     StackPane root = new StackPane();
 
     WebView webView = new WebView();
@@ -23,15 +25,15 @@ public class Main extends Application {
 
     root.getChildren().add(webView);
 
-    // TODO: Fix aspect ratio 4k screens
-    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    int width = gd.getDisplayMode().getWidth();
-    int height = gd.getDisplayMode().getHeight();
+    Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+    Scene scene = new Scene(root, visualBounds.getWidth(), visualBounds.getHeight());
 
-    Scene scene = new Scene(root, width, height);
+    File logo = new File("html/images/logo.png");
 
+    primaryStage.getIcons().add(new Image(logo.toURI().toString()));
     primaryStage.setTitle("Sportiza");
     primaryStage.setScene(scene);
+    primaryStage.setMaximized(true);
     primaryStage.show();
   }
 }
