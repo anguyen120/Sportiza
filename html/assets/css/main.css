@@ -8710,3 +8710,8 @@ input[type="radio"] + label:before {
         padding-top: 3em;
     }
 }
+
+ul.ui-autocomplete {
+    list-style: none;
+    background-color: inherit;
+}
