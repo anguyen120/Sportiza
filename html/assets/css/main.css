@@ -8715,3 +8715,5 @@ ul.ui-autocomplete {
     list-style: none;
     background-color: inherit;
 }
+
+.ui-helper-hidden-accessible { position: absolute; left:-999em; }
