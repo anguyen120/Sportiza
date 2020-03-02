@@ -8713,7 +8713,7 @@ input[type="radio"] + label:before {
 
 ul.ui-autocomplete {
     list-style: none;
-    background-color: inherit;
+    background-color: #fbfbfb;
 }
 
 .ui-helper-hidden-accessible { position: absolute; left:-999em; }

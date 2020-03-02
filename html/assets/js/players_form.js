@@ -6511,6 +6511,14 @@ var team_names = [
     });
 } );
 
+$.extend($.ui.autocomplete.prototype.options, {
+	open: function(event, ui) {
+		$(this).autocomplete("widget").css({
+            "width": ($(this).width() + "px")
+        });
+    }
+});
+
 var form = document.getElementById("players_form");
 form.addEventListener("submit", function () {
   var first_name = document.getElementById("first_name").value;
