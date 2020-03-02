@@ -6512,45 +6512,30 @@ var team_names = [
 } );
 
 var form = document.getElementById("players_form");
-document.getElementById("submit").addEventListener("click", function () {
-  print("Hello!");
-  submit_form();
+form.addEventListener("submit", function () {
+  var first_name = document.getElementById("first_name").value;
+  var last_name = document.getElementById("last_name").value;
+  var team = document.getElementById("team").value;
+  var uniform_number = document.getElementById('uniform_number').value;
+  var hometown = document.getElementById('hometown').value;
+
+  if (first_name.length == 0) {
+      first_name = "NULL";
+  }
+  if (last_name.length == 0) {
+      last_name = "NULL";
+  }
+  if (team.length == 0) {
+      team = "NULL";
+  }
+  if (uniform_number.length == 0) {
+      uniform_number = "NULL";
+  }
+  if (hometown.length == 0) {
+      hometown = "NULL";
+  }
+
+  window.javaConnector.playerFormRequest(first_name, last_name, team, uniform_number, hometown);
+  print(first_name, last_name, team, uniform_number, hometown);
+  form.submit()
 });
-
-function submit_form() {
-    const first_name = document.getElementById("first_name").value;
-    const last_name = document.getElementById("last_name").value;
-    const team = document.getElementById("team").value;
-    const uniform_number = document.getElementById('uniform_number').value;
-    const hometown = document.getElementById('hometown').value;
-
-    if (first_name.length == 0) {
-        first_name = "NULL";
-    }
-    if (last_name.length == 0) {
-        last_name = "NULL";
-    }
-    if (team.length == 0) {
-        team = "NULL";
-    }
-    if (uniform_number.length == 0) {
-        uniform_number = "NULL";
-    }
-    if (hometown.length == 0) {
-        hometown = "NULL";
-    }
-
-    javaConnector.playerFormRequest(first_name, last_name, team, uniform_number, hometown);
-    print(first_name, last_name, team, uniform_number, hometown);
-    form.submit()
-};
-
-var jsConnector = {
-    showResult: function (result) {
-        document.getElementById('result').innerHTML = result;
-    }
-};
-
-function getJsConnector() {
-    return jsConnector;
-};

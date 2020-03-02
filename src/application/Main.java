@@ -1,6 +1,8 @@
 package application;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -20,11 +22,6 @@ import java.io.IOException;
 import java.sql.*;
 
 public class Main extends Application {
-  /**
-   * for communication to the Javascript engine.
-   */
-  private JSObject javascriptConnector;
-
   private JavaConnector javaConnector = new JavaConnector(config.username, config.credential, config.databaseName);
 
   public static void main(String[] args) {
@@ -40,16 +37,19 @@ public class Main extends Application {
     WebEngine webEngine = webView.getEngine();
     webEngine.load(html.toURI().toString());
 
-    webEngine.getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
-      if (Worker.State.SUCCEEDED == newValue) {
-        // set an interface object named 'javaConnector' in the web engine's page
-        JSObject window = (JSObject) webEngine.executeScript("window");
-        window.setMember("javaConnector", javaConnector);
+    webEngine.getLoadWorker().stateProperty().addListener(
+            new ChangeListener() {
+              @Override
+              public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                if (newValue != Worker.State.SUCCEEDED) {
+                  return;
+                }
 
-        // get the Javascript connector object.
-        javascriptConnector = (JSObject) webEngine.executeScript("getJsConnector()");
-      }
-    });
+                JSObject window = (JSObject) webEngine.executeScript("window");
+                window.setMember("javaConnector", javaConnector);
+              }
+            }
+    );
 
     root.getChildren().add(webView);
 
@@ -79,6 +79,7 @@ public class Main extends Application {
 
     public void playerFormRequest(String FirstName, String LastName, String Team, String UniformNumber, String HomeTown) {
       //formating strings
+      System.out.println(FirstName + LastName + Team + UniformNumber + HomeTown);
 
       if (!FirstName.equals("NULL")) {
         FirstName = FirstName.replace("'", "''");
