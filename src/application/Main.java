@@ -13,6 +13,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,9 +79,7 @@ public class Main extends Application {
     }
 
     public void playerFormRequest(String FirstName, String LastName, String Team, String UniformNumber, String HomeTown) {
-      //formating strings
-      System.out.println(FirstName + LastName + Team + UniformNumber + HomeTown);
-
+      //formating strings inputs for SQL command
       if (!FirstName.equals("NULL")) {
         FirstName = FirstName.replace("'", "''");
         FirstName = String.format("'%s'", FirstName);
@@ -101,7 +100,7 @@ public class Main extends Application {
         HomeTown = HomeTown.replace("'", "''");
         HomeTown = String.format("'%s'", HomeTown);
       }
-      //base query format 
+      //base query format
       String query = "SELECT DISTINCT ON(\"players\".\"First Name\",\"players\".\"Last Name\") \"players\".\"id\",\"players\".\"First Name\", \"players\".\"Last Name\",\"players\".\"Position\", \"players\".\"Home Town\", \"players\".\"Home State\", \"players\".\"Home Country\"\n" +
               "    FROM \"players\" JOIN \"teams\"\n" +
               "        ON \"teams\".\"name\"  = COALESCE(%1$s,\"teams\".\"name\")\n" +
@@ -112,12 +111,12 @@ public class Main extends Application {
               "               and \"players\".\"Home Town\" = COALESCE(%5$s,\"players\".\"Home Town\");";
       //loading values to empty query
       query = String.format(query, Team, FirstName, LastName, UniformNumber, HomeTown);
-      //System.out.println(query);
       //response for executed Query
       ResultSet response = this.executeQuery(query);
       try {
-        FileWriter jsonFile = new FileWriter("requestFiles/requestFiles.json");
-        JSONObject fileObject = new JSONObject();
+        FileWriter fileOutput = new FileWriter(config.requestPlayerFormFile);
+        //JSONObject fileObject = new JSONObject();
+        JSONArray fileObject = new JSONArray();
         while (response.next()) {
           String playerID = response.getString("id");
           String playerName = response.getString("First Name");
@@ -126,18 +125,21 @@ public class Main extends Application {
           String position = response.getString("Position");
           String playerState = response.getString("Home State");
           String playerCountry = response.getString("Home Country");
-          System.out.println("First name: " + playerName + ", Last Name: " + playerLastName + ", Position: " + position + ", Home Town: " + playerTown + ", State: " + playerState + ", Country: " + playerCountry);
+          //System.out.println("First name: " + playerName + ", Last Name: " + playerLastName+ ", Position: " + position +  ", Home Town: " + playerTown + ", State: " + playerState + ", Country: " + playerCountry);
           JSONObject userObject = new JSONObject();
+          userObject.put("id", playerID);
           userObject.put("First Name", playerName);
           userObject.put("Last Name", playerLastName);
           userObject.put("Home Town", playerTown);
           userObject.put("Home State", playerState);
           userObject.put("Home Country", playerCountry);
           userObject.put("Position", position);
-          fileObject.put(playerID, userObject);
+          fileObject.put(userObject);
         }
-        jsonFile.write(fileObject.toString());
-        jsonFile.close();
+        fileOutput.write("var query = ");
+        fileOutput.write(fileObject.toString());
+        fileOutput.write(";");
+        fileOutput.close();
       } catch (SQLException | JSONException | IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
