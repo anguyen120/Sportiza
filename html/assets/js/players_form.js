@@ -6513,6 +6513,7 @@ var team_names = [
 
 var form = document.getElementById("players_form");
 document.getElementById("submit").addEventListener("click", function () {
+  print("Hello!");
   submit_form();
 });
 
@@ -6524,20 +6525,32 @@ function submit_form() {
     const hometown = document.getElementById('hometown').value;
 
     if (first_name.length == 0) {
-        first_name = "null";
+        first_name = "NULL";
     }
     if (last_name.length == 0) {
-        last_name = "null";
+        last_name = "NULL";
     }
     if (team.length == 0) {
-        team = "null";
+        team = "NULL";
     }
     if (uniform_number.length == 0) {
-        uniform_number = "null";
+        uniform_number = "NULL";
     }
     if (hometown.length == 0) {
-        hometown = "null";
+        hometown = "NULL";
     }
 
+    javaConnector.playerFormRequest(first_name, last_name, team, uniform_number, hometown);
+    print(first_name, last_name, team, uniform_number, hometown);
     form.submit()
+};
+
+var jsConnector = {
+    showResult: function (result) {
+        document.getElementById('result').innerHTML = result;
+    }
+};
+
+function getJsConnector() {
+    return jsConnector;
 };
