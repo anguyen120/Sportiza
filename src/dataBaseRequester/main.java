@@ -1,10 +1,15 @@
 public class main {
-
+	////////////////////////////////////////
+	//MAKE SURE the directory "requestFiles" is created before requesting anything
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub  
+		//constructor to set up the connector between database and this class
 		connectorPostgres connector = new connectorPostgres(config.username,config.credential,config.databaseName);
-		//connector.executeQuery("SELECT * FROM \"players\" WHERE \"First Name\" = 'Edgar';");
-		connector.playerFormRequest("NULL", "NULL", "Texas A&M", "NULL", "Plano");
+		
+		// requesting form with parameters in following order
+		//FirstName LastName TeamName UniformNumber HomeTown
+		connector.playerFormRequest("NULL", "NULL", "UCLA", "NULL", "Plano");
+		//connector.playerStatsRequest("1041700");
 	}
 	
 

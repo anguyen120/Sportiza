@@ -2,9 +2,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*; 
 import org.json.*;
+import java.util.ArrayList;
+
 public class connectorPostgres {
 	Connection conn;
-	
+	// setting up connector to database during constructor
 	connectorPostgres(String username, String credential, String database){
 		try {
 			Class.forName("org.postgresql.Driver");
@@ -14,8 +16,9 @@ public class connectorPostgres {
 			System.out.println(e);
 		} 
 	}
+	//request 
 	public void playerFormRequest(String FirstName, String LastName, String Team, String UniformNumber, String HomeTown) {
-		//formating strings
+		//formating strings inputs for SQL command
 		if(!FirstName.equals("NULL")) {
 			FirstName = FirstName.replace("\'","\'\'");
 			FirstName = String.format("\'%s\'", FirstName);
@@ -47,12 +50,12 @@ public class connectorPostgres {
 				"               and \"players\".\"Home Town\" = COALESCE(%5$s,\"players\".\"Home Town\");";
 		//loading values to empty query
 		query = String.format(query, Team,FirstName, LastName, UniformNumber, HomeTown);
-		//System.out.println(query);
 		//response for executed Query
 		ResultSet response = this.executeQuery(query);
 		try {
-			FileWriter jsonFile = new FileWriter("requestFiles/requestFiles.json");
-			JSONObject fileObject = new JSONObject();
+			FileWriter jsonFile = new FileWriter(config.requestPlayerFormFile);
+			//JSONObject fileObject = new JSONObject();
+			JSONArray fileObject = new JSONArray();
 			while(response.next()) {
 				String playerID = response.getString("id");
 				String playerName = response.getString("First Name");
@@ -63,13 +66,14 @@ public class connectorPostgres {
 				String playerCountry = response.getString("Home Country");
 				//System.out.println("First name: " + playerName + ", Last Name: " + playerLastName+ ", Position: " + position +  ", Home Town: " + playerTown + ", State: " + playerState + ", Country: " + playerCountry);
 				JSONObject userObject = new JSONObject();
+				userObject.put("id", playerID);
 				userObject.put("First Name", playerName);
 				userObject.put("Last Name", playerLastName);
 				userObject.put("Home Town", playerTown);
 				userObject.put("Home State", playerState);
 				userObject.put("Home Country", playerCountry);
 				userObject.put("Position", position);
-				fileObject.put(playerID, userObject);
+				fileObject.put(userObject);
 			}
 			jsonFile.write(fileObject.toString());
 			jsonFile.close();
@@ -79,8 +83,86 @@ public class connectorPostgres {
 		}
 	}
 	
+	public void playerStatsRequest(String id) {
+		String seasonsQuery = "SELECT \"players\".\"Season\" FROM \"players\" WHERE \"players\".\"id\" = %1$s;";
+		seasonsQuery = String.format(seasonsQuery, id);
+//		System.out.println(seasonsQuery);
+		ResultSet seasonsResponse = this.executeQuery(seasonsQuery);
+		ArrayList<String> seasons = new ArrayList<String>();
+		String overAllQuery = "SELECT round(avg(\"Player Game Stats\".\"Rush Yard\"),2) as \"Rush Yards\", round(avg(\"Player Game Stats\".\"Pass Yard\"),2) as \"Pass Yards\", round(avg(\"Player Game Stats\".\"Rush TD\"),2) as \"Rush TD\", round(avg(\"Player Game Stats\".\"Pass Comp\"),2) as \"Pass Comp\", round(avg(\"Player Game Stats\".\"Pass TD\"),2) as \"Pass TD\"\n" + 
+				"    FROM \"Player Game Stats\"\n" + 
+				"         JOIN \"players\"\n" + 
+				"             ON \"Player Game Stats\".\"Player Code\" = \"players\".\"id\" and \"players\".\"id\" = %1$s\n" + 
+				"         JOIN \"games\"\n" + 
+				"             ON \"games\".\"id\" = \"Player Game Stats\".\"Game Code\"\n" + 
+				"                    and (";
+		overAllQuery = String.format(overAllQuery, id);
+				
+		try {
+			FileWriter jsonFile = new FileWriter(config.playerStatsRequestFile);
+			JSONObject fileObject = new JSONObject();
+			while(seasonsResponse.next()) {
+				String season  = seasonsResponse.getString("Season");
+				seasons.add(season);
+				overAllQuery = overAllQuery+" \"games\".\"season\" = " + season + " or"	;
+			}
+			overAllQuery = overAllQuery.substring(0, overAllQuery.length() - 2) + ") and \"players\".\"Season\" = \"games\".\"season\";";
+			//System.out.println(overAllQuery);
+			// Requesting overall stats over seasons for a certain players
+			ResultSet statsResponse = this.executeQuery(overAllQuery);
+			statsResponse.next();
+			String rushYards= statsResponse.getString("Rush Yards");
+			String passYards = statsResponse.getString("Pass Yards");
+			String rushTD = statsResponse.getString("Rush TD");
+			String passTD = statsResponse.getString("Pass TD");
+			String passComp = statsResponse.getString("Pass Comp");
+			//adding values to json object
+			JSONObject overAllStats = new JSONObject();
+			overAllStats.put("Rush Yards", rushYards);
+			overAllStats.put("Pass Yards", passYards);
+			overAllStats.put("Rush TD", rushTD);
+			overAllStats.put("Pass TD", passTD);
+			overAllStats.put("Pass Comp", passComp);
+			fileObject.put("Overall Stats", overAllStats);
+			//System.out.println(rushTD);
+			String seasonQueryStatsBase= "SELECT round(avg(\"Player Game Stats\".\"Rush Yard\"),2) as \"Rush Yards\", round(avg(\"Player Game Stats\".\"Pass Yard\"),2) as \"Pass Yards\", round(avg(\"Player Game Stats\".\"Rush TD\"),2) as \"Rush TD\", round(avg(\"Player Game Stats\".\"Pass Comp\"),2) as \"Pass Comp\", round(avg(\"Player Game Stats\".\"Pass TD\"),2) as \"Pass TD\"\n" + 
+					"    FROM \"Player Game Stats\"\n" + 
+					"         JOIN \"players\"\n" + 
+					"             ON \"Player Game Stats\".\"Player Code\" = \"players\".\"id\" and \"players\".\"id\" = %1$s\n" + 
+					"         JOIN \"games\"\n" + 
+					"             ON \"games\".\"id\" = \"Player Game Stats\".\"Game Code\"\n" + 
+					"                    and \"games\".\"season\" = %2$s\n" + 
+					"                    and \"players\".\"Season\" = \"games\".\"season\";";
+			for(String season :seasons) {
+				String currSeasonquery = String.format(seasonQueryStatsBase, id,season);
+				//System.out.println(currSeasonquery);
+				statsResponse = this.executeQuery(currSeasonquery);
+				statsResponse.next();
+				rushYards= statsResponse.getString("Rush Yards");
+				passYards = statsResponse.getString("Pass Yards");
+				rushTD = statsResponse.getString("Rush TD");
+				passTD = statsResponse.getString("Pass TD");
+				passComp = statsResponse.getString("Pass Comp");
+				JSONObject seasonStats = new JSONObject();
+				seasonStats.put("Rush Yards", rushYards);
+				seasonStats.put("Pass Yards", passYards);
+				seasonStats.put("Rush TD", rushTD);
+				seasonStats.put("Pass TD", passTD);
+				seasonStats.put("Pass Comp", passComp);
+				fileObject.put(season, overAllStats);
+				//System.out.println(rushTD);
+			}
+			jsonFile.write(fileObject.toString());
+			jsonFile.close();
+		} catch (SQLException | IOException | JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//System.out.println(seasons.toString())
+		
+	}
 	
-	
+	//execute a query
 	public ResultSet executeQuery(String query) {
 		ResultSet response = null;
 		try {
