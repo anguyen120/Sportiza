@@ -109,13 +109,6 @@ See the [open issues](https://github.com/edgariph98/Sportiza/issues) for a list 
 
 
 
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
-
-
-
 <!-- CONTACT -->
 ## Contact
 
