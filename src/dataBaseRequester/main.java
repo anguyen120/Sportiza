@@ -9,7 +9,7 @@ public class main {
 		// requesting form with parameters in following order
 		//FirstName LastName TeamName UniformNumber HomeTown
 		//connector.playerFormRequest("NULL", "NULL", "UCLA", "NULL", "Plano");
-		connector.playerFormRequest("Edgar", "NULL", "NULL", "NULL", "NULL");
+		connector.playerFormRequest("NULL", "NULL", "Texas A&M", "NULL", "NULL");
 		//connector.playerStatsRequest("1041700");
 	}
 	
