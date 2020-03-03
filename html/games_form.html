@@ -10,6 +10,9 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <link href="assets/css/main.css" rel="stylesheet"/>
+    <link href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <noscript>
         <link href="assets/css/noscript.css" rel="stylesheet"/>
     </noscript>
@@ -41,23 +44,11 @@
                 <div class="fields">
                     <div class="field half">
                         <label for="home_teams">Home team</label>
-                        <select id="home_teams" name="home_teams">
-                            <option value=""></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <input id="home_teams" name="home_teams" type="text" value="">
                     </div>
                     <div class="field half">
                         <label for="visit_teams">Visit team</label>
-                        <select id="visit_teams" name="visit_teams">
-                            <option value=""></option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                        </select>
+                        <input id="visit_teams" name="visit_teams" type="text" value="">
                     </div>
                     <div class="field half">
                         <label for="conference">Conference</label>
@@ -90,14 +81,14 @@
 </div>
 
 
-<!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery.scrollex.min.js"></script>
 <script src="assets/js/jquery.scrolly.min.js"></script>
 <script src="assets/js/browser.min.js"></script>
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/games_form.js"></script>
+<script src="assets/js/const.js"></script>
 
 </body>
 </html>

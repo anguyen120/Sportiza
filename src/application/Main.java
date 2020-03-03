@@ -78,6 +78,7 @@ public class Main extends Application {
       }
     }
 
+    //request
     public void playerFormRequest(String FirstName, String LastName, String Team, String UniformNumber, String HomeTown) {
       //formating strings inputs for SQL command
       if (!FirstName.equals("NULL")) {
@@ -101,30 +102,58 @@ public class Main extends Application {
         HomeTown = String.format("'%s'", HomeTown);
       }
       //base query format
-      String query = "SELECT DISTINCT ON(\"players\".\"First Name\",\"players\".\"Last Name\") \"players\".\"id\",\"players\".\"First Name\", \"players\".\"Last Name\",\"players\".\"Position\", \"players\".\"Home Town\", \"players\".\"Home State\", \"players\".\"Home Country\"\n" +
-              "    FROM \"players\" JOIN \"teams\"\n" +
-              "        ON \"teams\".\"name\"  = COALESCE(%1$s,\"teams\".\"name\")\n" +
-              "               and \"teams\".\"id\" = \"players\".\"Team Code\"\n" +
-              "               and \"players\".\"First Name\" =  COALESCE(%2$s,\"players\".\"First Name\")\n" +
-              "               and \"players\".\"Last Name\" =  COALESCE(%3$s,\"players\".\"Last Name\")\n" +
-              "               and \"players\".\"Uniform Number\" = COALESCE(%4$s,\"players\".\"Uniform Number\")\n" +
-              "               and \"players\".\"Home Town\" = COALESCE(%5$s,\"players\".\"Home Town\");";
+      String query = "SELECT DISTINCT ON (playerChosen.\"id\") playerChosen.\"id\", \"First Name\",\"Last Name\",\"Home Town\",\"Home Country\",\"Home State\",\"Position\", \"name\" FROM  (SELECT DISTINCT ON (\"players\".\"id\")  \"players\".\"id\",\"players\".\"First Name\", \"players\".\"Last Name\",\"players\".\"Position\", \"players\".\"Home Town\", \"players\".\"Home State\", \"players\".\"Home Country\",\"players\".\"Team Code\"\n" +
+              "    FROM players\n" +
+              "        WHERE \"First Name\" =  COALESCE(%2$s,\"players\".\"First Name\")\n" +
+              "               and \"Last Name\" = COALESCE(%3$s,\"players\".\"Last Name\")\n" +
+              "               and (\"players\".\"Uniform Number\" = COALESCE(%4$s, \"players\".\"Uniform Number\"))\n" +
+              "               and (\"players\".\"Home Town\" = COALESCE(%5$s, \"players\".\"Home Town\")))as playerChosen\n" +
+              "        INNER JOIN \"teams\"\n" +
+              "            ON \"teams\".\"id\" = playerChosen.\"Team Code\" WHERE \"teams\".\"name\" = COALESCE(%1$s, \"teams\".\"name\");\n";
+      if (HomeTown.equals("NULL")) {
+        query = "SELECT DISTINCT ON (playerChosen.\"id\") playerChosen.\"id\", \"First Name\",\"Last Name\",\"Home Town\",\"Home Country\",\"Home State\",\"Position\", \"name\" FROM  (SELECT DISTINCT ON (\"players\".\"id\")  \"players\".\"id\",\"players\".\"First Name\", \"players\".\"Last Name\",\"players\".\"Position\", \"players\".\"Home Town\", \"players\".\"Home State\", \"players\".\"Home Country\",\"players\".\"Team Code\"\n" +
+                "    FROM players\n" +
+                "        WHERE \"First Name\" =  COALESCE(%2$s,\"players\".\"First Name\")\n" +
+                "               and \"Last Name\" = COALESCE(%3$s,\"players\".\"Last Name\")\n" +
+                "               and (\"players\".\"Uniform Number\" = COALESCE(%4$s, \"players\".\"Uniform Number\") )\n" +
+                "               and (\"players\".\"Home Town\" = COALESCE(%5$s, \"players\".\"Home Town\") OR \"players\".\"Home Town\" IS NULL))as playerChosen\n" +
+                "        INNER JOIN \"teams\"\n" +
+                "            ON \"teams\".\"id\" = playerChosen.\"Team Code\" WHERE \"teams\".\"name\" = COALESCE(%1$s, \"teams\".\"name\");\n";
+      }
       //loading values to empty query
       query = String.format(query, Team, FirstName, LastName, UniformNumber, HomeTown);
       //response for executed Query
+      System.out.println(query);
       ResultSet response = this.executeQuery(query);
       try {
-        FileWriter fileOutput = new FileWriter(config.requestPlayerFormFile);
-        //JSONObject fileObject = new JSONObject();
+        FileWriter jsonFile = new FileWriter(config.requestPlayerFormFile);
         JSONArray fileObject = new JSONArray();
         while (response.next()) {
           String playerID = response.getString("id");
           String playerName = response.getString("First Name");
+          if (response.wasNull()) {
+            playerName = "N/A";
+          }
           String playerLastName = response.getString("Last Name");
+          if (response.wasNull()) {
+            playerLastName = "N/A";
+          }
           String playerTown = response.getString("Home Town");
+          if (response.wasNull()) {
+            playerTown = "N/A";
+          }
           String position = response.getString("Position");
+          if (response.wasNull()) {
+            position = "N/A";
+          }
           String playerState = response.getString("Home State");
+          if (response.wasNull()) {
+            playerState = "N/A";
+          }
           String playerCountry = response.getString("Home Country");
+          if (response.wasNull()) {
+            playerCountry = "N/A";
+          }
           //System.out.println("First name: " + playerName + ", Last Name: " + playerLastName+ ", Position: " + position +  ", Home Town: " + playerTown + ", State: " + playerState + ", Country: " + playerCountry);
           JSONObject userObject = new JSONObject();
           userObject.put("id", playerID);
@@ -136,10 +165,11 @@ public class Main extends Application {
           userObject.put("Position", position);
           fileObject.put(userObject);
         }
-        fileOutput.write("var query = ");
-        fileOutput.write(fileObject.toString());
-        fileOutput.write(";");
-        fileOutput.close();
+        jsonFile.write("var query = ");
+        jsonFile.write(fileObject.toString());
+        jsonFile.write(";");
+        jsonFile.close();
+        System.out.println("Request with Parameters: First Name: " + FirstName + ", Last Name: " + LastName + ", " + "Team: " + Team + ", Uniform Number: " + UniformNumber + ", Home Town: " + HomeTown + "------completed");
       } catch (SQLException | JSONException | IOException e) {
         // TODO Auto-generated catch block
         e.printStackTrace();
