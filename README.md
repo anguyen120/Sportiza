@@ -18,7 +18,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/edgariph98/Sportiza">
-    <img src="html/images/logo.png" alt="Logo" width="80" height="80">
+    <img src="html/images/logo.png" alt="Logo" width="200" height="200">
   </a>
 
   <h3 align="center">Sportiza</h3>
