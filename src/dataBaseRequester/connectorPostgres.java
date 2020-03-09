@@ -217,13 +217,23 @@ public class connectorPostgres {
                     "            JOIN games ON GameCodes.\"Game Code\" = \"games\".id WHERE \"season\" = %2$s) as\n" +
                     "                SeasonGames JOIN \"Player Game Stats\" ON SeasonGames.\"Game Code\" = \"Player Game Stats\".\"Game Code\" WHERE \"Player Code\" =  %1$s;";
             //requesting all stats
+            String playerTeam = "SELECT \"name\" FROM players JOIN teams t on players.\"Season\" = t.season and players.\"Team Code\" = t.id and players.\"id\" = %1$s WHERE \"Season\"=%2$s;";
             for(String season :seasons) {
                 String currSeasonquery = String.format(seasonQueryStatsBase, id,season);
                 //System.out.println(currSeasonquery);
+                String seasonNamequery = String.format(playerTeam, id,season);
+                statsResponse = this.executeQuery(seasonNamequery);
+                statsResponse.next();
+
+                String teamName = statsResponse.getString("name");
+                //System.out.println(teamName);
                 statsResponse = this.executeQuery(currSeasonquery);
                 statsResponse.next();
                 //System.out.println(currSeasonquery);
-                fileObject.put(season, parseQuery(statsResponse));
+                JSONObject queryObject =  parseQuery(statsResponse);
+                queryObject.put("Team Name",teamName);
+                fileObject.put(season,queryObject);
+
                 //System.out.println(rushTD);
             }
 //            jsonFile.write("var query = ");
