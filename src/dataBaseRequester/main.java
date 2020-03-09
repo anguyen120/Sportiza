@@ -10,7 +10,7 @@ public class main {
         //FirstName LastName TeamName UniformNumber HomeTown
         //connector.playerFormRequest("NULL", "NULL", "UCLA", "NULL", "Plano");
         //connector.playerFormRequest("NULL", "NULL", "Texas A&M", "NULL", "NULL");
-        connector.playerStatsRequest("1041700");
+        connector.playerStatsRequest("1041700","Johnny", "Manziel","kerriville");
     }
 
 
