@@ -1,1 +1,1 @@
-var query = [];
+var query = {};

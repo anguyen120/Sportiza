@@ -225,10 +225,12 @@ input, select, textarea {
 
 	h3 {
 		font-size: 1.5rem;
+		font-family: "Monument Extended";
 	}
 
 	h4 {
 		font-size: 1.1rem;
+		font-family: "Monument Extended";
 	}
 
 	h5 {
@@ -2186,7 +2188,7 @@ button,
     input[type="button"].icon:before,
     button.icon:before,
     .button.icon:before {
-        margin-right: 0.5rem;
+        margin-right: 0rem;
     }
 
     input[type="submit"].fit,
@@ -4881,7 +4883,6 @@ input[type="radio"] + label:before {
 	}
 
 		.spotlight.style1 .content {
-			padding: 7rem 7rem 5rem 7rem ;
 			-moz-align-self: center;
 			-webkit-align-self: center;
 			-ms-align-self: center;
@@ -4894,8 +4895,8 @@ input[type="radio"] + label:before {
 			-webkit-flex-shrink: 1;
 			-ms-flex-shrink: 1;
 			flex-shrink: 1;
-			width: 65%;
-			max-width: 64rem;
+			width: 50%;
+			max-width: 50rem;
 			margin: 0 auto;
 		}
 
@@ -4934,7 +4935,6 @@ input[type="radio"] + label:before {
 		@media screen and (max-width: 1680px) {
 
 			.spotlight.style1 .content {
-				padding: 5rem 5rem 3rem 5rem ;
 			}
 
 		}
@@ -4942,7 +4942,6 @@ input[type="radio"] + label:before {
 		@media screen and (max-width: 1280px) {
 
 			.spotlight.style1 .content {
-				padding: 4rem 4rem 2rem 4rem ;
 			}
 
 		}
@@ -8711,9 +8710,41 @@ input[type="radio"] + label:before {
     }
 }
 
+/* Autocomplete format */
 ul.ui-autocomplete {
-    list-style: none;
     background-color: #fbfbfb;
+    list-style: none;
 }
 
+    ul.ui-autocomplete li {
+        border-top: solid 1px;
+        padding: 0.5rem 0;
+    }
+
+        ul.ui-autocomplete li:first-child {
+            border-top: 0;
+        }
+
 .ui-helper-hidden-accessible { position: absolute; left:-999em; }
+
+/* Accordion menu */
+.accordion_head {
+  background-color: black;
+  color: white;
+  cursor: pointer;
+  margin: 0 0 1px 0;
+  padding: 1% 2%;
+}
+
+.accordion_body {
+  background: #fbfbfb;
+}
+
+.accordion_body p {
+  padding: 2% 3%;
+  margin: 0px;
+}
+
+.plusminus {
+  float: right;
+}
