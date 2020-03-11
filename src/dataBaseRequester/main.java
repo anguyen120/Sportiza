@@ -10,7 +10,12 @@ public class main {
         //FirstName LastName TeamName UniformNumber HomeTown
         //connector.playerFormRequest("NULL", "NULL", "UCLA", "NULL", "Plano");
         //connector.playerFormRequest("NULL", "NULL", "Texas A&M", "NULL", "NULL");
-        connector.playerStatsRequest("1041700","Johnny", "Manziel","kerriville");
+
+        //Parameters player id, First Name, Last name, home town
+        //connector.playerStatsRequest("1041700","Johnny", "Manziel","kerriville");
+
+        //Parameters team name, conference name, subdivision (they can all be "NULL"
+        connector.teamFormRequest("NULL","NULL","NULL");
     }
 
 

@@ -129,7 +129,9 @@ public class connectorPostgres {
                 userObject.put("Position", position);
                 fileObject.put(userObject);
             }
+            jsonFile.write("var query = ");
             jsonFile.write(fileObject.toString());
+            jsonFile.write(";");
             jsonFile.close();
             System.out.println("Request with Parameters: First Name: " + FirstName + ", Last Name: " + LastName + ", " + "Team: " + Team + ", Uniform Number: " + UniformNumber + ", Home Town: " + HomeTown+ "------completed");
         } catch (SQLException | JSONException | IOException e) {
@@ -242,9 +244,9 @@ public class connectorPostgres {
 
                 //System.out.println(rushTD);
             }
-//            jsonFile.write("var query = ");
+            jsonFile.write("var query = ");
             jsonFile.write(fileObject.toString());
-            //jsonFile.write(";");
+            jsonFile.write(";");
             jsonFile.close();
         } catch (SQLException | IOException | JSONException e) {
             // TODO Auto-generated catch block
@@ -252,6 +254,68 @@ public class connectorPostgres {
         }
         //System.out.println(seasons.toString())
 
+    }
+
+    //team form request to database
+    public void teamFormRequest(String teamName, String conferenceName, String subdivision){
+        //formating strings inputs for SQL command
+        if(!teamName.equals("NULL")) {
+            teamName = teamName.replace("\'","\'\'");
+            teamName = String.format("\'%s\'", teamName);
+        }
+        if(!conferenceName.equals("NULL")) {
+            conferenceName = conferenceName.replace("\'","\'\'");
+            conferenceName = String.format("\'%s\'", conferenceName);
+        }
+        if(!subdivision.equals("NULL")) {
+            subdivision = subdivision.replace("\'","\'\'");
+            subdivision = String.format("\'%s\'", subdivision);
+        }
+        //query to get all teams formed by query
+        String teamFormQuery = "SELECT DISTINCT ON (t.id) conf.\"name\" as \"Conference Name\", t.name as \"Team Name\", conf.subdivision,t.id\n" +
+                "    from teams t INNER JOIN conferences conf\n" +
+                "        ON conf.id =  t.conference\n" +
+                "            WHERE\n" +
+                "                t.name = COALESCE(%1$s,t.name)\n" +
+                "                AND conf.name = COALESCE(%2$s,conf.name)\n" +
+                "                AND conf.subdivision=  COALESCE(%3$s,conf.subdivision);";
+        //grabbing all inputs into query
+        teamFormQuery = String.format(teamFormQuery,teamName,conferenceName,subdivision);
+        System.out.println(teamFormQuery);
+        try {
+            FileWriter jsonFile = new FileWriter(config.teamFormRequest);
+            JSONArray fileObject = this.parseQueryasList(this.executeQuery(teamFormQuery));
+            jsonFile.write("var query = ");
+            jsonFile.write(fileObject.toString());
+            jsonFile.write(";");
+            jsonFile.close();
+        } catch (IOException | JSONException | SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public JSONArray parseQueryasList(ResultSet response) throws SQLException, JSONException {
+        JSONArray fileObject = new JSONArray();
+        //getting keys from response
+        ArrayList<String>  keys = new ArrayList<String>();
+        ResultSetMetaData rsmd = response.getMetaData();
+        for (int i = 1; i <= rsmd.getColumnCount(); i++ ) {
+            keys.add(rsmd.getColumnName(i));
+        }
+        //adding objects to jsonArray
+        while(response.next()){
+            JSONObject jsonObj = new JSONObject();
+            for(String key: keys){
+                String value = response.getString(key);
+                if(response.wasNull()){
+                    jsonObj.put(key,"NULL");
+                }else{
+                    jsonObj.put(key,value);
+                }
+            }
+            fileObject.put(jsonObj);
+        }
+        return fileObject;
     }
     public JSONObject parseQuery(ResultSet statsQueryResponse) throws SQLException, JSONException {
         JSONObject seasonStats = new JSONObject();
