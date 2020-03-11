@@ -1,4 +1,40 @@
-var team_names = [
+const conferences = [
+    "Atlantic 10",
+    "Atlantic Coast Conference",
+    "Big 12 Conference",
+    "Big East Conference",
+    "Big Sky",
+    "Big South",
+    "Big Ten Conference",
+    "Colonial",
+    "Conference USA",
+    "Gateway",
+    "Ind",
+    "Independent",
+    "Ivy",
+    "Metro Atlantic",
+    "Mid-American Conference",
+    "Mid-Eastern",
+    "Mountain West",
+    "Northeast",
+    "OVC",
+    "Pacific-10 Conference",
+    "Patriot",
+    "Pioneer",
+    "Southeastern Conference",
+    "Southern",
+    "Southland",
+    "Southwestern",
+    "Sun Belt",
+    "Western Athletic Conference"
+];
+
+const subdivisions = [
+    "FBS",
+    "FCS"
+];
+
+const team_names = [
     "Abilene Christian",
     "Air Force",
     "Akron",
@@ -77,7 +113,7 @@ var team_names = [
     "Georgia Tech",
     "Grambling",
     "Hampton",
-    "Harvard",
+    "Harconstd",
     "Hawai'i",
     "Hofstra",
     "Holy Cross",
@@ -256,7 +292,7 @@ var team_names = [
     "Youngstown State"
 ];
 
-var hometowns = [
+const hometowns = [
     "Fort Campbell",
     "Southport",
     "Afono",
@@ -889,7 +925,7 @@ var hometowns = [
     "Baton Rouge",
     "Hutchinson",
     "Ruckersville",
-    "Bolivar",
+    "Boliconst",
     "Chesterland",
     "Haughton",
     "St. Charles",
@@ -2665,7 +2701,7 @@ var hometowns = [
     "Desert",
     "Tarpon Springs",
     "Claremore",
-    "Alvarado",
+    "Alconstado",
     "Canyon Country ",
     "LaVerne",
     "Newnan",
@@ -2915,7 +2951,7 @@ var hometowns = [
     "Plainwell",
     "Meridian",
     "Overland Park",
-    "Navarre",
+    "Naconstre",
     "Franconia",
     "Burton",
     "Rawlings",
@@ -3201,7 +3237,7 @@ var hometowns = [
     "Orinda",
     "Kapsowar",
     "Homer Glen",
-    "Harvard",
+    "Harconstd",
     "Hodges",
     "Belleair",
     "Montebello",
@@ -3948,7 +3984,7 @@ var hometowns = [
     "Fishers",
     "Wilimington",
     "McCracken",
-    "Mount Calvary",
+    "Mount Calconsty",
     "Onaga",
     "Grand Ledge",
     "Church Hill",
@@ -4625,7 +4661,7 @@ var hometowns = [
     "North Babylon",
     "Myerstown",
     "Hudson",
-    "Tavares",
+    "Taconstes",
     "Muskego",
     "Richboro",
     "Dora",
