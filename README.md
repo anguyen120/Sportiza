@@ -63,7 +63,7 @@ To get a local copy up and running follow these simple steps.
 **Before running, make sure to be connected to TamuLink through on-campus Wi-Fi or VPN. The database is only accessible from TamuLink.**
 
 1. After launching Sportiza, select the preferred component.
-2. (Optionally) Populate the form to filter components.
+2. (Optional) Populate the form to filter components.
 3. Submit form.
 4. View table.
 5. Select row in table for further details.
