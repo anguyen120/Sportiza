@@ -6,4 +6,5 @@ public class config {
   public static String databaseName = "jdbc:postgresql://csce-315-db.engr.tamu.edu/sportizadevspace";
   public static String requestPlayerFormFile = "requestFiles/playerFormRequest.js";
   public static String playerStatsRequestFile = "requestFiles/playerStatsRequest.js";
+  public static String teamFormRequest = "requestFiles/teamFormRequest.js";
 }
