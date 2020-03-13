@@ -1,17 +1,8 @@
-
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
-
 
 
 <!-- PROJECT LOGO -->
@@ -25,18 +16,8 @@
 
   <p align="center">
     CSCE315 SPR20 Project 2 @ Texas A&M
-    <br />
-    <a href="https://github.com/edgariph98/Sportiza"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/edgariph98/Sportiza">View Demo</a>
-    ·
-    <a href="https://github.com/edgariph98/Sportiza/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/edgariph98/Sportiza/issues">Request Feature</a>
   </p>
 </p>
-
 
 
 <!-- TABLE OF CONTENTS -->
@@ -45,30 +26,21 @@
 * [About the Project](#about-the-project)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
   * [Installation](#installation)
 * [Usage](#usage)
-* [Roadmap](#roadmap)
-* [Contributing](#contributing)
-* [License](#license)
 * [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
 
 
-
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+The project focuses on developing an application for use in an introductory statistics course for Texas A&M University (TAMU)’s Sport’s Management department. The application should allow students to use different filters for players. A PostgreSQL database holds the current college football data. A graphical user interface interacts with the database and the user’s query parameters.
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-
+![Product Name Screen Shot][product-screenshot]
 
 ### Built With
 
-* []()
-* []()
-* []()
-
+* [JavaFX](https://openjfx.io/)
 
 
 <!-- GETTING STARTED -->
@@ -76,37 +48,26 @@
 
 To get a local copy up and running follow these simple steps.
 
-### Prerequisites
-
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-```sh
-npm install npm@latest -g
-```
-
 ### Installation
- 
-1. Clone the Sportiza
-```sh
-git clone https://github.com/edgariph98/Sportiza.git
-```
 
+1. Download the latest release of Sportiza for your environment [here](https://github.com/edgariph98/Sportiza/releases/latest).
+2. Run the script from:
+	* Windows
+		* Run the `Sportiza.bat` file by double-clicking on it.
+	* MacOS/Linux
+		* Run  `sh Sportiza.sh` in Terminal.
 
 
 <!-- USAGE EXAMPLES -->
 ## Usage
+**Before running, make sure to be connected to TamuLink through on-campus Wi-Fi or VPN. The database is only accessible from TamuLink.**
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-See the [open issues](https://github.com/edgariph98/Sportiza/issues) for a list of proposed features (and known issues).
-
+1. After launching Sportiza, select the preferred component.
+2. (Optionally) Populate the form to filter components.
+3. Submit form.
+4. View table.
+5. Select row in table for further details.
+6. Repeat!
 
 
 <!-- CONTACT -->
@@ -115,16 +76,13 @@ See the [open issues](https://github.com/edgariph98/Sportiza/issues) for a list 
 Project Link: [https://github.com/edgariph98/Sportiza](https://github.com/edgariph98/Sportiza)
 
 
-
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
 
-
-
+* [Alan Nguyen](https://github.com/anguyen120)
+* [Daniel Peralta](https://github.com/DanP114)
+* [Edgar Portales](https://github.com/edgariph98)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -137,3 +95,4 @@ Project Link: [https://github.com/edgariph98/Sportiza](https://github.com/edgari
 [stars-url]: https://github.com/edgariph98/Sportiza/stargazers
 [issues-shield]: https://img.shields.io/github/issues/edgariph98/Sportiza.svg?style=flat-square
 [issues-url]: https://github.com/edgariph98/Sportiza/issues
+[product-screenshot]: html/images/product.png
