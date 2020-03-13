@@ -36,7 +36,7 @@
 ## About The Project
 The project focuses on developing an application for use in an introductory statistics course for Texas A&M University (TAMU)’s Sport’s Management department. The application should allow students to use different filters for players. A PostgreSQL database holds the current college football data. A graphical user interface interacts with the database and the user’s query parameters.
 
-[Product Name Screen Shot][product-screenshot]
+![Product Name Screen Shot][product-screenshot]
 
 ### Built With
 
