@@ -15,7 +15,7 @@
   <h3 align="center">Sportiza</h3>
 
   <p align="center">
-    Texas A&M CSCE315 SPR20 Project 2
+    Texas A&M CSCE 315 SPR20 Project 2
   </p>
 </p>
 
