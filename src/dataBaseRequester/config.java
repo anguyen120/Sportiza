@@ -6,5 +6,6 @@ public class config {
     public static String requestPlayerFormFile = "requestFiles/playerFormRequest.js";
     public static String playerStatsRequestFile = "requestFiles/playerStatsRequest.js";
     public static String teamFormRequest = "requestFiles/teamFormRequest.js";
-
+    public static String shortestVictoryChain = "requestFiles/shortestVictoryChain.js";
+    public static String teamStatsRequestFile = "requestFiles/teamStatsRequest.js";
 }

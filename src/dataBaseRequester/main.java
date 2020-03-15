@@ -1,3 +1,5 @@
+import java.sql.SQLException;
+
 public class main {
     ////////////////////////////////////////
     //MAKE SURE the directory "requestFiles" is created before requesting anything
@@ -15,8 +17,13 @@ public class main {
         //connector.playerStatsRequest("1041700","Johnny", "Manziel","kerriville");
 
         //Parameters team name, conference name, subdivision (they can all be "NULL"
-        connector.teamFormRequest("NULL","NULL","NULL");
+        //connector.teamFormRequest("NULL","NULL","NULL");
+
+        //updating the winning team of the games table
+        //connector.updateAllWinningTeams();
+
+        //Shortest Victory Chain Algorithm
+        //Parameters : source Team ID, target Team ID
+        connector.shortestVictoryChainRequest("697","5");
     }
-
-
 }

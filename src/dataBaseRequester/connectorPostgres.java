@@ -1,11 +1,11 @@
 
+import org.jgrapht.alg.shortestpath.BFSShortestPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 
 import java.io.FileWriter;
@@ -14,20 +14,29 @@ import java.sql.*;
 import org.json.*;
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.List;
 
+import org.jgrapht.*;
+import org.jgrapht.graph.*;
+import org.jgrapht.nio.*;
+import org.jgrapht.nio.dot.DOTExporter;
+import org.jgrapht.traverse.*;
 public class connectorPostgres {
     Connection conn;
+    DefaultDirectedGraph<String, NamedEdge> winningDirectedGraph = new DefaultDirectedGraph<>(NamedEdge.class);
     // setting up connector to database during constructor
     connectorPostgres(String username, String credential, String database){
         try {
             Class.forName("org.postgresql.Driver");
             conn =  DriverManager.getConnection(database,username, credential);
             System.out.println("Connected to sportizadevspace database!");
+            this.loadWinningGraph();
+            System.out.println("Winning Directed Graph Loaded!");
         }catch(Exception e){
             System.out.println(e);
         }
     }
-    //request
+    //request for all players given all its parameters
     public void playerFormRequest(String FirstName, String LastName, String Team, String UniformNumber, String HomeTown) {
         //formating strings inputs for SQL command
         if(!FirstName.equals("NULL")) {
@@ -139,7 +148,7 @@ public class connectorPostgres {
             e.printStackTrace();
         }
     }
-
+    //request stats for an specific player given its id
     public void playerStatsRequest(String id,String firstName, String lastName, String homeTown) {
         String seasonsQuery = "SELECT DISTINCT /*\"games\".\"id\",*/ \"games\".\"season\" /*\"players\".\"First Name\", \"players\".\"Last Name\"*/\n" +
                 "    FROM \"Player Game Stats\"\n" +
@@ -256,9 +265,9 @@ public class connectorPostgres {
 
     }
 
-    //team form request to database
+    //team form request to database,
     public void teamFormRequest(String teamName, String conferenceName, String subdivision){
-        //formating strings inputs for SQL command
+        //formatting strings inputs for SQL command
         if(!teamName.equals("NULL")) {
             teamName = teamName.replace("\'","\'\'");
             teamName = String.format("\'%s\'", teamName);
@@ -292,9 +301,15 @@ public class connectorPostgres {
         } catch (IOException | JSONException | SQLException e) {
             e.printStackTrace();
         }
+    }
+    //team game stats request to database
+    public void teamGameStatsRequest(String teamId, String teamName){
 
     }
-    public JSONArray parseQueryasList(ResultSet response) throws SQLException, JSONException {
+    
+
+    //parse all lines from query and create a json object from each line in the response based on its keys
+    private JSONArray parseQueryasList(ResultSet response) throws SQLException, JSONException {
         JSONArray fileObject = new JSONArray();
         //getting keys from response
         ArrayList<String>  keys = new ArrayList<String>();
@@ -317,7 +332,8 @@ public class connectorPostgres {
         }
         return fileObject;
     }
-    public JSONObject parseQuery(ResultSet statsQueryResponse) throws SQLException, JSONException {
+    //parses a Resultset from names given in the response as columns
+    private JSONObject parseQuery(ResultSet statsQueryResponse) throws SQLException, JSONException {
         JSONObject seasonStats = new JSONObject();
         //getting keys from response
         ArrayList<String>  keys = new ArrayList<String>();
@@ -337,7 +353,7 @@ public class connectorPostgres {
         return seasonStats;
     }
     //execute a query
-    public ResultSet executeQuery(String query) {
+    private ResultSet executeQuery(String query) {
         ResultSet response = null;
         try {
             Statement st = conn.createStatement();
@@ -347,7 +363,199 @@ public class connectorPostgres {
             e.printStackTrace();
         }
         return response;
+    }
+
+    //determines the winning and losing team given a game code
+    private String[]getWinningTeam(String GameCode){
+        String winnerQuery = "SELECT \"Team Code\", \"Points\" FROM \"Game Team Stats\" WHERE \"Game Code\" = %1$s;";
+        winnerQuery = String.format(winnerQuery,GameCode);
+        String team1 ="";
+        String team2 ="";
+        int team1Score;
+        int team2Score;
+
+        String winningTeam ="";
+        String defeatedTeam = "";
+        ResultSet response = this.executeQuery(winnerQuery);
+        try {
+            response.next();
+            team1 = response.getString("Team Code");
+            team1Score = response.getInt("Points");
+            response.next();
+            team2 = response.getString("Team Code");
+            team2Score = response.getInt("Points");
+            if(team1Score > team2Score){
+                winningTeam = team1;
+                defeatedTeam = team2;
+            }else{
+                winningTeam = team2;
+                defeatedTeam = team1;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Winning Team: " + winningTeam);
+        String[] teams = new String[2];
+        teams[0] = winningTeam;
+        teams[1] = defeatedTeam;
+        System.out.println("Winner: " + winningTeam + ", Loser: " + defeatedTeam);
+        return teams;
+    }
+    //this updates te game for a specific game code updating the winning team column and defeated team column
+    private void updateGameWinningTeam(String GameCode, String winningTeam, String defeatedTeam) {
+        String updateQuery = "UPDATE \"games Copy\"\n" +
+                "    set \"Winning Team\" = '%1$s',\n" +
+                "        \"Defeated Team\" = '%2$s'\n" +
+                "        WHERE id = '%3$s';";
+        updateQuery = String.format(updateQuery,winningTeam,defeatedTeam,GameCode);
+        try {
+            PreparedStatement st = conn.prepareStatement(updateQuery);
+            st.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    //get game codes from database from games table
+    private ArrayList<String> getAllGameCodes() throws SQLException {
+        ArrayList<String> gameCodes = new ArrayList<String>();
+        ResultSet response = this.executeQuery("SELECT id from \"games Copy\";");
+        while (response.next()){
+            gameCodes.add(response.getString("id"));
+        }
+        System.out.println(gameCodes.size());
+        return gameCodes;
+    }
+    //this updates weather a team won or lose on a game on the games table
+    public void updateAllWinningTeams(){
+        ArrayList<String> gameCodes = null;
+        try {
+            gameCodes = this.getAllGameCodes();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        for(String gameCode: gameCodes){
+            String[] teams = getWinningTeam(gameCode);
+            String winner = teams[0];
+            String loser = teams[1];
+            this.updateGameWinningTeam(gameCode,winner,loser);
+        }
+    }
+    //adding teams Ids to winning directed graph
+    private void addTeamIdToGraph(){
+        String teamQuery = "SELECT DISTINCT ON(\"id\") \"id\" FROM teams;";
+        ResultSet teamsResponse = this.executeQuery(teamQuery);
+        try {
+            while(teamsResponse.next()){
+                String teamId = teamsResponse.getString("id");
+                this.winningDirectedGraph.addVertex(teamId);
+                //System.out.println(teamId);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Number of vertices: " + this.winningDirectedGraph.vertexSet().size());
+    }
+    //adds all the edges to winning team graph
+    private void addWinEdgesToGraph(){
+        String gamesQuery = "SELECT \"Winning Team\", \"Defeated Team\", \"season\" FROM \"games Copy\";\n";
+        ResultSet gamesResponse = this.executeQuery(gamesQuery);
+        int count= 0;
+        try {
+
+            while(gamesResponse.next()){
+                count++;
+                String winningTeam = gamesResponse.getString("Winning Team");
+                String defeatedTeam = gamesResponse.getString("Defeated Team");
+                int season = gamesResponse.getInt("season");
+                winningDirectedGraph.addEdge(winningTeam,defeatedTeam,new NamedEdge(season,winningTeam,defeatedTeam));
+                //System.out.println(winningTeam + ", " +  defeatedTeam + ", " +  season);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Total Number of Edges(Games): " + winningDirectedGraph.edgeSet().size());
+    }
+
+    //loading and populating graph
+    private void loadWinningGraph(){
+        this.addTeamIdToGraph();
+        this.addWinEdgesToGraph();
+    }
+    //shortest victory chain given a source and target id of the team
+    public void shortestVictoryChainRequest(String sourceID, String targetID){
+        int edgesForTeam = this.winningDirectedGraph.outDegreeOf(sourceID);
+        System.out.println("Edges for Texas A&M University: " + edgesForTeam);
+        DijkstraShortestPath<String, DefaultEdge> path = new DijkstraShortestPath(winningDirectedGraph);
+        GraphPath pathShort = path.getPath(sourceID,targetID);
+        List<NamedEdge> edges = pathShort.getEdgeList();
+        List<String> vertices = pathShort.getVertexList();
+
+        System.out.println();
+        JSONObject GraphObject = new JSONObject();
+        JSONArray graphVertices = new JSONArray();
+        JSONArray graphEdges = new JSONArray();
+        //populating vertices JSON array
+        for(String vertice: vertices){
+            JSONObject vertexObject = new JSONObject();
+            String teamID = vertice;
+            String teamName = this.getTeamName(teamID);
+            try {
+                vertexObject.put("id",teamID);
+                vertexObject.put("label",teamName);
+                vertexObject.put("size",3);
+                graphVertices.put(vertexObject);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            System.out.println(vertice);
+        }
+        //populating edges array
+        for(NamedEdge e: edges){
+           JSONObject edgeObject = new JSONObject();
+           String sourceNode = e.getWinningTeam();
+           String targetNode = e.getDefeatedTeam();
+           String edgeID = e.getWinningTeam() + "-" + Integer.toString(e.season()) + "-" + e.getDefeatedTeam();
+           String label = Integer.toString(e.season());
+            try {
+                edgeObject.put("id", edgeID);
+                edgeObject.put("source",sourceNode);
+                edgeObject.put("target",targetNode);
+                edgeObject.put("type","arrow");
+                graphEdges.put(edgeObject);
+            } catch (JSONException ex) {
+                ex.printStackTrace();
+            }
+        }
+        FileWriter jsonFile = null;
+        try {
+            jsonFile = new FileWriter(config.shortestVictoryChain);
+            GraphObject.put("nodes",graphVertices);
+            GraphObject.put("edges",graphEdges);
+            jsonFile.write("var graphData = ");
+            jsonFile.write(GraphObject.toString());
+            jsonFile.write(";");
+            jsonFile.close();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
+    //get a team name based on its mapping id
+    private String getTeamName(String teamID){
+        String TeamQuery = "SELECT DISTINCT ON(\"id\") \"name\" FROM teams WHERE id = %1$s;";
+        TeamQuery = String.format(TeamQuery,teamID);
+        ResultSet teamNameResponse = this.executeQuery(TeamQuery);
+        String teamName = "";
+        try {
+            teamNameResponse.next();
+            teamName = teamNameResponse.getString("name");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return teamName;
+
+    }
 }
