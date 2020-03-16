@@ -11,19 +11,30 @@ public class main {
         // requesting form with parameters in following order
         //FirstName LastName TeamName UniformNumber HomeTown
         //connector.playerFormRequest("NULL", "NULL", "UCLA", "NULL", "Plano");
-        //connector.playerFormRequest("NULL", "NULL", "Texas A&M", "NULL", "NULL");
+        connector.playerFormRequest("NULL", "NULL", "Texas A&M", "NULL", "NULL");
 
         //Parameters player id, First Name, Last name, home town
-        //connector.playerStatsRequest("1041700","Johnny", "Manziel","kerriville");
+        connector.playerStatsRequest("1041700","Johnny", "Manziel","kerriville");
 
         //Parameters team name, conference name, subdivision (they can all be "NULL"
-        //connector.teamFormRequest("NULL","NULL","NULL");
+        connector.teamFormRequest("NULL","NULL","NULL");
+
+        //Requesting stats for a given team
+        //Parameters String teamID, String team Name
+        connector.teamGameStatsRequest("697","Texas A&M");
+
 
         //updating the winning team of the games table
         //connector.updateAllWinningTeams();
 
         //Shortest Victory Chain Algorithm
+        //outpput redirected to shortestVictoryChain.js
         //Parameters : source Team ID, target Team ID
         connector.shortestVictoryChainRequest("697","5");
+
+
+        //System.out.println(connector.getTeamActiveSeasons("697"));
+        //System.out.println(connector.getConferenceName("697","2013"));
+
     }
 }

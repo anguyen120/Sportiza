@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.jgrapht.*;
 import org.jgrapht.graph.*;
-import org.jgrapht.nio.*;
-import org.jgrapht.nio.dot.DOTExporter;
+//import org.jgrapht.nio.*;
+//import org.jgrapht.nio.dot.DOTExporter;
 import org.jgrapht.traverse.*;
 public class connectorPostgres {
     Connection conn;
@@ -29,11 +29,11 @@ public class connectorPostgres {
         try {
             Class.forName("org.postgresql.Driver");
             conn =  DriverManager.getConnection(database,username, credential);
-            System.out.println("Connected to sportizadevspace database!");
+            this.SportizaPrint("Connected to sportizadevspace database!");
             this.loadWinningGraph();
-            System.out.println("Winning Directed Graph Loaded!");
+            this.SportizaPrint("Winning Directed Graph Loaded!\n");
         }catch(Exception e){
-            System.out.println(e);
+           this.SportizaPrint(e.toString());
         }
     }
     //request for all players given all its parameters
@@ -89,7 +89,8 @@ public class connectorPostgres {
         //loading values to empty query
         query = String.format(query, Team,FirstName, LastName, UniformNumber, HomeTown);
         //response for executed Query
-        System.out.println(query);
+        //System.out.println(query);
+        this.SportizaPrint("Requesting Players with parameters; First Name: " + FirstName + ", Last Name: " + LastName + ", Team: " + Team + ", Uniform Number: "  + UniformNumber + ", HomeTown: " + HomeTown);
         ResultSet response = this.executeQuery(query);
         try {
             FileWriter jsonFile = new FileWriter(config.requestPlayerFormFile);
@@ -142,7 +143,7 @@ public class connectorPostgres {
             jsonFile.write(fileObject.toString());
             jsonFile.write(";");
             jsonFile.close();
-            System.out.println("Request with Parameters: First Name: " + FirstName + ", Last Name: " + LastName + ", " + "Team: " + Team + ", Uniform Number: " + UniformNumber + ", Home Town: " + HomeTown+ "------completed");
+            this.SportizaPrint("Players Form Request with Parameters: First Name: " + FirstName + ", Last Name: " + LastName + ", " + "Team: " + Team + ", Uniform Number: " + UniformNumber + ", Home Town: " + HomeTown+ " Completed! \n");
         } catch (SQLException | JSONException | IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -158,7 +159,7 @@ public class connectorPostgres {
                 "            ON \"games\".\"id\" = \"Player Game Stats\".\"Game Code\";";
         seasonsQuery = String.format(seasonsQuery, id);
 //		System.out.println(seasonsQuery);
-
+        this.SportizaPrint("Requesting Stats Data for Player; " + "id: "   + id + ", First Name: " + firstName + ", Last Name: " + lastName);
         ResultSet seasonsResponse = this.executeQuery(seasonsQuery);
         ArrayList<String> seasons = new ArrayList<String>();
         String  statsQueryrequested = "SELECT\n" +
@@ -205,7 +206,7 @@ public class connectorPostgres {
         //query with stats requested for all seasons
         String overAllQuery = statsQueryrequested + "        FROM \"Player Game Stats\" WHERE \"Player Code\" = %1$s;";
         overAllQuery = String.format(overAllQuery, id);
-        System.out.println(overAllQuery);
+        //System.out.println(overAllQuery);
         try {
             FileWriter jsonFile = new FileWriter(config.playerStatsRequestFile);
             JSONObject fileObject = new JSONObject();
@@ -261,13 +262,14 @@ public class connectorPostgres {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        //System.out.println(seasons.toString())
+        this.SportizaPrint("Requestfor PLayer; " + "id: "   + id + ", First Name: " + firstName + ", Last Name: " + lastName + " Completed!\n");
 
     }
 
     //team form request to database,
     public void teamFormRequest(String teamName, String conferenceName, String subdivision){
         //formatting strings inputs for SQL command
+
         if(!teamName.equals("NULL")) {
             teamName = teamName.replace("\'","\'\'");
             teamName = String.format("\'%s\'", teamName);
@@ -290,7 +292,8 @@ public class connectorPostgres {
                 "                AND conf.subdivision=  COALESCE(%3$s,conf.subdivision);";
         //grabbing all inputs into query
         teamFormQuery = String.format(teamFormQuery,teamName,conferenceName,subdivision);
-        System.out.println(teamFormQuery);
+        //System.out.println(teamFormQuery);
+        this.SportizaPrint("Requesting Teams with Parameters: Team Name: " + teamName + ", Conference: " + conferenceName + ", Subdivision: " + subdivision);
         try {
             FileWriter jsonFile = new FileWriter(config.teamFormRequest);
             JSONArray fileObject = this.parseQueryasList(this.executeQuery(teamFormQuery));
@@ -301,10 +304,107 @@ public class connectorPostgres {
         } catch (IOException | JSONException | SQLException e) {
             e.printStackTrace();
         }
+        this.SportizaPrint("Request for Teams with Parameters: Team Name: " + teamName + ", Conference: " + conferenceName + ", Subdivision: " + subdivision + ". Completed\n" );
+
     }
     //team game stats request to database
     public void teamGameStatsRequest(String teamId, String teamName){
+        this.SportizaPrint("Requesting Stats for team: " + teamName);
+        ArrayList<String> seasons = this.getTeamActiveSeasons(teamId);
+        String StatsRequested = "SELECT\n" +
+                "    round(cast(cast(SUM(\"Pass Comp\") as float4) / (CASE cast(SUM(\"Pass Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Pass Att\") as float4) END) as numeric)*100.00,1) as \"Pass Completion Rate\",\n" +
+                "    --Touchdowns stats\n" +
+                "    ROUND(avg(\"Pass TD\" + \"Rush TD\"  + \"Kickoff Ret TD\"  + \"Punt Ret TD\" + \"Fum Ret TD\" + \"Int Ret TD\" + \"Misc Ret TD\"),2) as \"TD Average per Game\",\n" +
+                "    SUM(\"Pass TD\" + \"Rush TD\"  + \"Kickoff Ret TD\"  + \"Punt Ret TD\" + \"Fum Ret TD\" + \"Int Ret TD\" + \"Misc Ret TD\") as \"Total TD\",\n" +
+                "    SUM(\"Rush TD\") as \"Rush TD Total\",\n" +
+                "    SUM(\"Pass TD\") as \"Pass TD Total\",\n" +
+                "    SUM(\"Int Ret TD\") as \"Interception Ret TD\",\n" +
+                "    SUM(\"Kickoff Ret TD\") as \"Kickoff Ret TD\",\n" +
+                "    SUM(\"Punt Ret TD\") as \"Punt Ret TD\",\n" +
+                "    SUM(\"Fum Ret TD\") as \"Fumble Ret TD\",\n" +
+                "    SUM(\"Misc Ret TD\") as \"Other TD\",\n" +
+                "    --yards stats\n" +
+                "    ROUND(avg(\"Pass Yard\" + \"Rush Yard\" + \"Punt Yard\" + \"Misc Ret Yard\" + \"Int Ret Yard\" + \"Kickoff Ret Yard\" +  \"Punt Ret Yard\" + \"Kickoff Yard\" + \"Fum Ret Yard\"),2) as \"Yards per Game\",\n" +
+                "    SUM(\"Pass Yard\" + \"Rush Yard\" + \"Punt Yard\" + \"Misc Ret Yard\" + \"Int Ret Yard\" + \"Kickoff Ret Yard\" +  \"Punt Ret Yard\" + \"Kickoff Yard\" + \"Fum Ret Yard\") as \"Total Yards\",\n" +
+                "    SUM(\"Rush Yard\") as \"Rush Yards Total\",\n" +
+                "    SUM(\"Pass Yard\") as \"Pass Yards Total\",\n" +
+                "    SUM(\"Int Ret Yard\") as \"Interception Ret Yards\",\n" +
+                "    SUM(\"Kickoff Ret Yard\") as \"Kickoff Ret Yards\",\n" +
+                "    SUM(\"Punt Ret Yard\") as \"Punt Ret Yards\",\n" +
+                "    SUM(\"Fum Ret Yard\") as \"Fumble Ret Yards\",\n" +
+                "    SUM(\"Misc Ret Yard\") as \"Other Yards\",\n" +
+                "    --KickingS Stats and Extra Point Conversions\n" +
+                "    SUM(\"Kickoff Yard\") as \"Total Kickoff Yards\",\n" +
+                "    SUM(\"Field Goal Made\") as \"Total Field Goals Made\",\n" +
+                "    SUM(\"Off XP Kick Made\") as \"Total Extra Point Kicks Made\",\n" +
+                "    SUM(\"Off 2XP Made\" + \"Def 2XP Made\") as \"Total 2-Point Convertions Made\",\n" +
+                "    round(avg(\"Kickoff Yard\"),1) as \"Kickoff Yards Per Game\",\n" +
+                "    round(cast(cast(SUM(\"Field Goal Made\") as float4) / (CASE cast(SUM(\"Field Goal Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Field Goal Att\") as float4) END) as numeric)*100.00,1) as \"Field Goal Completion Rate\",\n" +
+                "    round(cast(cast(SUM(\"Off 2XP Made\" + \"Def 2XP Made\") as float4) / (CASE cast(SUM(\"Off 2XP Att\" + \"Def 2XP Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Off 2XP Att\" + \"Def 2XP Att\") as float4) END) as numeric)*100.00,1) as \"2-Point Conversion Completion Rate\",\n" +
+                "    round(cast(cast(SUM(\"Off XP Kick Made\") as float4) / (CASE cast(SUM(\"Off XP Kick Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Off XP Kick Att\") as float4) END) as numeric)*100.00,1) as \"Extra-Point Kick Completion Rate\",\n" +
+                "    --Defense stats\n" +
+                "    round(avg(\"Sack Yard\"),1) as \"Sack Yards per Game\",\n" +
+                "    SUM(\"Sack Yard\") as \"Total Sack Yards\",\n" +
+                "    round(avg(\"Fumble Forced\")) as \"Fumbles forced per Game\",\n" +
+                "    SUM(\"Fumble Forced\") as \"Total Fumbles forced\",\n" +
+                "    round(avg(\"Pass Broken Up\"),1) as \"Passes Broken per Game\",\n" +
+                "    SUM(\"Pass Broken Up\") as \"Total Passes broken\",\n" +
+                "    round(avg(\"Kick/Punt Blocked\"),1) as \"Kick/Punt Blocked\",\n" +
+                "    SUM(\"Kick/Punt Blocked\") as \"Total Kick/Punts Blocked\",\n" +
+                "    round(avg(\"QB Hurry\"),1) as \"QB Hurries per Game\",\n" +
+                "    SUM(\"QB Hurry\") AS \"Total QB Hurries\",\n" +
+                "    round(avg(\"Tackle Assist\" + \"Tackle Solo\"),1) as \"Tackles per Game\",\n" +
+                "    SUM(\"Tackle Solo\" + \"Tackle Assist\") as \"Total Tackles\",\n" +
+                "    --Penalties and plays Stats\n" +
+                "    SUM(\"Penalty\") as \"Total Penalties\",\n" +
+                "    SUM(\"Penalty Yard\") as \"Total Penalty Yards\",\n" +
+                "    round(cast(cast(SUM(\"Fourth Down Conv\") as float4) / (CASE cast(SUM(\"Fourth Down Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Fourth Down Att\") as float4) END) as numeric)*100.00,1) as \"Fourth Down Convertion Completion Rate\",\n" +
+                "    round(cast(cast(SUM(\"Third Down Conv\") as float4) / (CASE cast(SUM(\"Third Down Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Third Down Att\") as float4) END) as numeric)*100.00,1) as \"Third Down Convertion Completion Rate\",\n" +
+                "    round(avg(\"Penalty\"),1) as \"Penalties Average per Game\",\n" +
+                "    round(avg(\"Penalty Yard\"),1) as \"Penalty Yards Average per Game\",\n" +
+                "    round(avg(\"Time Of Possession\"),1) as \"Possession Time Average per Game\"";
+        String overAllStatsQuery = StatsRequested + "\n" + "    FROM \"Game Team Stats\" WHERE \"Team Code\" =  %1$s;";
+        overAllStatsQuery = String.format(overAllStatsQuery, teamId);
+        String seasonStatsBaseQuery = StatsRequested + "\n" + "    FROM\n" +
+                "      (SELECT \"Game Code\" FROM\n" +
+                "        (SELECT \"Game Code\" FROM \"Game Team Stats\" where \"Team Code\" = 697) as  GameCodes\n" +
+                "            JOIN games ON GameCodes.\"Game Code\" = \"games\".id WHERE \"season\" = %1$s) as\n" +
+                "                SeasonGames JOIN \"Game Team Stats\" ON SeasonGames.\"Game Code\" = \"Game Team Stats\".\"Game Code\" WHERE \"Team Code\" =  %2$s;";
+        //System.out.println(seasonStatsBaseQuery);
+        //System.out.println(overAllStats);
 
+
+        try {
+            FileWriter jsonFile = new FileWriter(config.teamStatsRequestFile);
+            JSONObject fileObject = new JSONObject();
+            //Meta Data
+            fileObject.put("Team Name", teamName);
+            fileObject.put("Seasons", seasons);
+            //Adding OverALl stats for team
+            ResultSet overAllStats = this.executeQuery(overAllStatsQuery);
+            overAllStats.next();
+            fileObject.put("Overall",this.parseQuery(overAllStats));
+
+            for(String season: seasons){
+                String currSeasonQuery = String.format(seasonStatsBaseQuery,season, teamId);
+                //System.out.println(currSeasonQuery);
+                String conferenceName = this.getConferenceName(teamId,season);
+                ResultSet seasonStatsResponse = this.executeQuery(currSeasonQuery);
+                seasonStatsResponse.next();
+                JSONObject seasonObject = this.parseQuery(seasonStatsResponse);
+                seasonObject.put("Conference",conferenceName);
+                fileObject.put(season,seasonObject);
+                //System.out.println(conferenceName);
+            }
+            jsonFile.write("var teamStatsData = ");
+            jsonFile.write(fileObject.toString());
+            jsonFile.write(";");
+            jsonFile.close();
+
+        } catch (IOException | JSONException | SQLException e) {
+            e.printStackTrace();
+        }
+        this.SportizaPrint("Request of Stats for Team: " + teamName + " Completed!\n");
     }
     
 
@@ -349,7 +449,7 @@ public class connectorPostgres {
                 seasonStats.put(key,value);
             }
         }
-        System.out.println(keys);
+        //System.out.println(keys);
         return seasonStats;
     }
     //execute a query
@@ -453,7 +553,7 @@ public class connectorPostgres {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Number of vertices: " + this.winningDirectedGraph.vertexSet().size());
+        //System.out.println("Number of vertices: " + this.winningDirectedGraph.vertexSet().size());
     }
     //adds all the edges to winning team graph
     private void addWinEdgesToGraph(){
@@ -473,7 +573,7 @@ public class connectorPostgres {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("Total Number of Edges(Games): " + winningDirectedGraph.edgeSet().size());
+        //System.out.println("Total Number of Edges(Games): " + winningDirectedGraph.edgeSet().size());
     }
 
     //loading and populating graph
@@ -484,13 +584,14 @@ public class connectorPostgres {
     //shortest victory chain given a source and target id of the team
     public void shortestVictoryChainRequest(String sourceID, String targetID){
         int edgesForTeam = this.winningDirectedGraph.outDegreeOf(sourceID);
-        System.out.println("Edges for Texas A&M University: " + edgesForTeam);
+        //System.out.println("Edges for Texas A&M University: " + edgesForTeam);
+        this.SportizaPrint("Determining Shortest Victory Chain from Team: " + this.getTeamName(sourceID) + " to " + this.getTeamName(targetID));
         DijkstraShortestPath<String, DefaultEdge> path = new DijkstraShortestPath(winningDirectedGraph);
         GraphPath pathShort = path.getPath(sourceID,targetID);
         List<NamedEdge> edges = pathShort.getEdgeList();
         List<String> vertices = pathShort.getVertexList();
 
-        System.out.println();
+
         JSONObject GraphObject = new JSONObject();
         JSONArray graphVertices = new JSONArray();
         JSONArray graphEdges = new JSONArray();
@@ -507,7 +608,7 @@ public class connectorPostgres {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            System.out.println(vertice);
+            //System.out.println(vertice);
         }
         //populating edges array
         for(NamedEdge e: edges){
@@ -539,8 +640,7 @@ public class connectorPostgres {
             e.printStackTrace();
         }
 
-
-
+        this.SportizaPrint("Shortest Victory Chain Determined from Team: " + this.getTeamName(sourceID) + " to " + this.getTeamName(targetID) + "\n");
     }
 
     //get a team name based on its mapping id
@@ -557,5 +657,46 @@ public class connectorPostgres {
         }
         return teamName;
 
+    }
+    //returns name of conference for a team given its team id and season
+    public String getConferenceName(String teamID, String season){
+        String query = "SELECT t.\"id\", c.\"name\" \n" +
+                "    FROM teams t \n" +
+                "        JOIN conferences c \n" +
+                "            ON t.conference = c.id \n" +
+                "        WHERE t.id = %1$s  AND t.season = %2$s;";
+        query = String.format(query,teamID,season);
+        ResultSet response = this.executeQuery(query);
+        String conferenceName = "";
+        try {
+            response.next();
+            conferenceName = response.getString("name");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return conferenceName;
+    }
+    public ArrayList<String> getTeamActiveSeasons(String teamID){
+        ArrayList<String> seasons = new ArrayList<String>();
+        String query = "SELECT DISTINCT /*\"games\".\"id\",*/ \"games\".\"season\" /*\"players\".\"First Name\", \"players\".\"Last Name\"*/\n" +
+                "    FROM \"Game Team Stats\"\n" +
+                "        JOIN \"teams\"\n" +
+                "            ON \"Game Team Stats\".\"Team Code\" = \"teams\".\"id\" and \"teams\".\"id\" = %1$s\n" +
+                "        JOIN \"games\"\n" +
+                "            ON \"games\".\"id\" = \"Game Team Stats\".\"Game Code\" ORDER BY \"season\" DESC;";
+        query = String.format(query,teamID);
+        ResultSet response = this.executeQuery(query);
+        try {
+            while(response.next()){
+                String s = response.getString("season");
+                seasons.add(s);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return seasons;
+    }
+    private void SportizaPrint(String message){
+        System.out.println("Sportiza/---->" + message);
     }
 }
