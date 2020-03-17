@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.sql.*;
 import org.json.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.List;
 
@@ -396,6 +397,10 @@ public class connectorPostgres {
                 fileObject.put(season,seasonObject);
                 //System.out.println(conferenceName);
             }
+            ArrayList<String> mostStats = new ArrayList<>(Arrays.asList("Rush Yard", "Pass Yard", "Points", "Sack","Rush TD","Pass TD"));
+            for(String stat:mostStats){
+                fileObject.put("Most " + stat,this.mostStatsAgainstTeam(teamId,stat));
+            }
             jsonFile.write("var teamStatsData = ");
             jsonFile.write(fileObject.toString());
             jsonFile.write(";");
@@ -659,7 +664,7 @@ public class connectorPostgres {
 
     }
     //returns name of conference for a team given its team id and season
-    public String getConferenceName(String teamID, String season){
+    private String getConferenceName(String teamID, String season){
         String query = "SELECT t.\"id\", c.\"name\" \n" +
                 "    FROM teams t \n" +
                 "        JOIN conferences c \n" +
@@ -676,7 +681,7 @@ public class connectorPostgres {
         }
         return conferenceName;
     }
-    public ArrayList<String> getTeamActiveSeasons(String teamID){
+    private ArrayList<String> getTeamActiveSeasons(String teamID){
         ArrayList<String> seasons = new ArrayList<String>();
         String query = "SELECT DISTINCT /*\"games\".\"id\",*/ \"games\".\"season\" /*\"players\".\"First Name\", \"players\".\"Last Name\"*/\n" +
                 "    FROM \"Game Team Stats\"\n" +
@@ -696,7 +701,39 @@ public class connectorPostgres {
         }
         return seasons;
     }
+    //format printing
     private void SportizaPrint(String message){
         System.out.println("Sportiza/---->" + message);
+    }
+    //given a named stat, and a team ID, it determines the top 3 teams with most of those stats against the give team id
+    private JSONArray mostStatsAgainstTeam(String targetTeamID, String statName){
+        String statQuery = "SELECT\"Team Code\", \"%2$s\",\"season\"\n" +
+                "    FROM\n" +
+                "         (SELECT \"id\",\"season\" FROM \"games Copy\" WHERE \"Winning Team\" = %1$s or \"Defeated Team\" = %1$s) as allGames\n" +
+                "             INNER\n" +
+                "                     JOIN \"Game Team Stats\" GTS ON allGames.id = GTS.\"Game Code\" WHERE \"Team Code\" != %1$s ORDER BY \"Rush Yard\" DESC LIMIT 3;";
+        statQuery = String.format(statQuery,targetTeamID,statName);
+        //SportizaPrint(statQuery);
+        ResultSet mostStatsResp = this.executeQuery(statQuery);
+        JSONArray mostStatsObject = new JSONArray();
+        try {
+            int rank  = 1;
+            while(mostStatsResp.next()){
+                JSONObject mostTeamStats = new JSONObject();
+                String season = mostStatsResp.getString("season");
+                String teamName = this.getTeamName(mostStatsResp.getString("Team Code"));
+                String statsNumber = mostStatsResp.getString(statName);
+                mostTeamStats.put("Team Name", teamName);
+                mostTeamStats.put(statName, statsNumber);
+                mostTeamStats.put("rank", rank);
+                mostTeamStats.put("season",season);
+                rank++;
+                mostStatsObject.put(mostTeamStats);
+
+            }
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+        }
+        return mostStatsObject;
     }
 }
