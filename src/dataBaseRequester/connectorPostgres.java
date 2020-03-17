@@ -359,8 +359,8 @@ public class connectorPostgres {
                 "    --Penalties and plays Stats\n" +
                 "    SUM(\"Penalty\") as \"Total Penalties\",\n" +
                 "    SUM(\"Penalty Yard\") as \"Total Penalty Yards\",\n" +
-                "    round(cast(cast(SUM(\"Fourth Down Conv\") as float4) / (CASE cast(SUM(\"Fourth Down Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Fourth Down Att\") as float4) END) as numeric)*100.00,1) as \"Fourth Down Convertion Completion Rate\",\n" +
-                "    round(cast(cast(SUM(\"Third Down Conv\") as float4) / (CASE cast(SUM(\"Third Down Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Third Down Att\") as float4) END) as numeric)*100.00,1) as \"Third Down Convertion Completion Rate\",\n" +
+                "    round(cast(cast(SUM(\"Fourth Down Conv\") as float4) / (CASE cast(SUM(\"Fourth Down Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Fourth Down Att\") as float4) END) as numeric)*100.00,1) as \"Fourth Down Conversion Completion Rate\",\n" +
+                "    round(cast(cast(SUM(\"Third Down Conv\") as float4) / (CASE cast(SUM(\"Third Down Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Third Down Att\") as float4) END) as numeric)*100.00,1) as \"Third Down Conversion Completion Rate\",\n" +
                 "    round(avg(\"Penalty\"),1) as \"Penalties Average per Game\",\n" +
                 "    round(avg(\"Penalty Yard\"),1) as \"Penalty Yards Average per Game\",\n" +
                 "    round(avg(\"Time Of Possession\"),1) as \"Possession Time Average per Game\"";
