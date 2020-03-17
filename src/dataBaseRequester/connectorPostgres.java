@@ -338,7 +338,7 @@ public class connectorPostgres {
                 "    SUM(\"Kickoff Yard\") as \"Total Kickoff Yards\",\n" +
                 "    SUM(\"Field Goal Made\") as \"Total Field Goals Made\",\n" +
                 "    SUM(\"Off XP Kick Made\") as \"Total Extra Point Kicks Made\",\n" +
-                "    SUM(\"Off 2XP Made\" + \"Def 2XP Made\") as \"Total 2-Point Convertions Made\",\n" +
+                "    SUM(\"Off 2XP Made\" + \"Def 2XP Made\") as \"Total 2-Point Conversions Made\",\n" +
                 "    round(avg(\"Kickoff Yard\"),1) as \"Kickoff Yards Per Game\",\n" +
                 "    round(cast(cast(SUM(\"Field Goal Made\") as float4) / (CASE cast(SUM(\"Field Goal Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Field Goal Att\") as float4) END) as numeric)*100.00,1) as \"Field Goal Completion Rate\",\n" +
                 "    round(cast(cast(SUM(\"Off 2XP Made\" + \"Def 2XP Made\") as float4) / (CASE cast(SUM(\"Off 2XP Att\" + \"Def 2XP Att\") as float4) WHEN 0 THEN 1 ELSE  cast(SUM(\"Off 2XP Att\" + \"Def 2XP Att\") as float4) END) as numeric)*100.00,1) as \"2-Point Conversion Completion Rate\",\n" +
