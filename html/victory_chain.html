@@ -1,0 +1,114 @@
+<!DOCTYPE HTML>
+<!--
+	Story by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+<head>
+    <title>Sportiza</title>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
+    <link href="assets/css/main.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <noscript>
+        <link href="assets/css/noscript.css" rel="stylesheet"/>
+    </noscript>
+    <!-- START SIGMA IMPORTS -->
+    <script src="assets/js/sigma.js-1.2.1/src/sigma.core.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/conrad.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/utils/sigma.utils.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/utils/sigma.polyfills.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/sigma.settings.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/classes/sigma.classes.dispatcher.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/classes/sigma.classes.configurable.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/classes/sigma.classes.graph.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/classes/sigma.classes.camera.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/classes/sigma.classes.quad.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/classes/sigma.classes.edgequad.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/captors/sigma.captors.mouse.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/captors/sigma.captors.touch.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/sigma.renderers.canvas.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/sigma.renderers.webgl.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/sigma.renderers.svg.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/sigma.renderers.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edges.curvedArrow.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curve.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.arrow.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.edgehovers.curvedArrow.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/canvas/sigma.canvas.extremities.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/svg/sigma.svg.utils.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/svg/sigma.svg.nodes.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/svg/sigma.svg.edges.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/svg/sigma.svg.edges.curve.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/svg/sigma.svg.labels.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/renderers/svg/sigma.svg.hovers.def.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/middlewares/sigma.middlewares.rescale.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/middlewares/sigma.middlewares.copy.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/misc/sigma.misc.animation.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/misc/sigma.misc.bindEvents.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/misc/sigma.misc.bindDOMEvents.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/src/misc/sigma.misc.drawHovers.js"></script>
+    <!-- END SIGMA IMPORTS -->
+    <script src="assets/js/sigma.js-1.2.1/plugins/sigma.plugins.dragNodes/sigma.plugins.dragNodes.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/plugins/sigma.renderers.edgeLabels/settings.js"></script>
+    <script src="assets/js/sigma.js-1.2.1/plugins/sigma.renderers.edgeLabels/sigma.canvas.edges.labels.def.js"></script>
+</head>
+<body class="is-preload">
+
+<!-- Header -->
+<header id="header">
+    <h1 style="font-size: 1em;">SPORTIZA</h1>
+    <nav>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="games_form.html">Games</a></li>
+            <li><a href="hometowns.html">Hometowns</a></li>
+            <li><a href="players_form.html">Players</a></li>
+            <li><a href="teams_form.html">Teams</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Wrapper -->
+<div class="divided" id="wrapper">
+
+    <!-- Overview -->
+    <section class="wrapper style1 align-left fullscreen">
+        <div class="inner medium">
+            <div id="container">
+                <div id="graph-container"></div>
+            </div>
+            <ul class="actions">
+                <li><input onclick="history.back()" type="button" value="Back"/></li>
+            </ul>
+        </div>
+    </section>
+</div>
+
+
+<!-- Scripts -->
+<script src="assets/js/jquery.scrollex.min.js"></script>
+<script src="assets/js/jquery.scrolly.min.js"></script>
+<script src="assets/js/browser.min.js"></script>
+<script src="assets/js/breakpoints.min.js"></script>
+<script src="assets/js/util.js"></script>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/const.js"></script>
+<script src="assets/js/victory_chain.js"></script>
+<script src="../requestFiles/shortestVictoryChain.js"></script>
+
+</body>
+</html>

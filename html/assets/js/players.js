@@ -7,15 +7,14 @@ function td_render(element_id, data_source) {
     gradientStroke.addColorStop(1, '#2f4858');
 
     var labels = [
-        "Pass TD Total",
-        "Fumble Ret TD",
         "Total TD",
         "Rush TD Total",
+        "Pass TD Total",
+        "Interception Ret TD",
         "Kickoff Ret TD",
-        "Other TD",
         "Punt Ret TD",
-        "Pass Received TD",
-        "Interception Ret TD"
+        "Fumble Ret TD",
+        "Other TD"
     ];
 
     var data = [];
@@ -76,15 +75,14 @@ function yards_render(element_id, data_source) {
     gradientStroke.addColorStop(1, '#5F5695');
 
     var labels = [
-        "Rush Yards Total",
-        "Interception Ret Yard",
-        "Pass Received Yards",
         "Total Yards",
-        "Other Yards",
-        "Total Kickoff Yards",
+        "Rush Yards Total",
         "Pass Yards Total",
+        "Interception Ret Yards",
         "Kickoff Ret Yards",
-        "Fumble Ret Yards"
+        "Punt Ret Yards",
+        "Fumble Ret Yards",
+        "Other Yards"
     ];
 
     var data = [];
@@ -148,8 +146,8 @@ $(document).ready(function() {
         location.reload(true);
     }
 
-  td_list = {};
-  yards_list = {};
+  var td_list = {};
+  var yards_list = {};
 
   var first_name = query["First Name"].toUpperCase();
   var last_name = query["Last Name"].toUpperCase();
@@ -157,11 +155,11 @@ $(document).ready(function() {
   document.getElementById("render").innerHTML = `<h2 style="margin-bottom: 0px;">${first_name} ${last_name}</h2>`;
 
   if (query["Home Town"] != "N/A" && query["Home State"] != "N/A" && query["Home Country"] != "N/A") {
-    document.getElementById("render").innerHTML += `<p style="margin-bottom: 2%;">from ${query["Home Town"]}, ${query["Home State"]} ${query["Home Country"]}</p>`
+    document.getElementById("render").innerHTML += `<p>from ${query["Home Town"]}, ${query["Home State"]} ${query["Home Country"]}</p>`
   } else if (query["Home Town"] != "N/A" && query["Home State"] != "N/A") {
-    document.getElementById("render").innerHTML += `<p style="margin-bottom: 2%;">from ${query["Home Town"]}, ${query["Home State"]}</p>`
+    document.getElementById("render").innerHTML += `<p>from ${query["Home Town"]}, ${query["Home State"]}</p>`
   } else if (query["Home Town"] != "N/A") {
-    document.getElementById("render").innerHTML += `<p style="margin-bottom: 2%;">from ${query["Home Town"]}</p>`
+    document.getElementById("render").innerHTML += `<p>from ${query["Home Town"]}</p>`
   }
 
   document.getElementById("render").innerHTML += `<section class="banner style1 onload-content-fade-in">` +
@@ -177,14 +175,14 @@ $(document).ready(function() {
      `</div>` +
      `<div class="content" style="padding: 0% 0% 3% 2%;">` +
      `<h4 style="margin-bottom: 0px;"><b>DEFENSE STATS</b></h4>` +
-     `<p style="margin-bottom: 0px;"><b>Kick/Punt Blocked: </b>${query["Overall"]["Kick/Punt Blocked"]}</p>` +
-     `<p style="margin-bottom: 0px;"><b>Total Kick/Punts Blocked: </b>${query["Overall"]["Total Kick/Punts Blocked"]}</p>` +
-     `<p style="margin-bottom: 0px;"><b>Fumbles forced per Game: </b>${query["Overall"]["Fumbles forced per Game"]}</p>` +
-     `<p style="margin-bottom: 0px;"><b>Total Fumbles forced: </b>${query["Overall"]["Total Fumbles forced"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>Sack Yards per Game: </b>${query["Overall"]["Sack Yards per Game"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>Total Sack Yards: </b>${query["Overall"]["Total Sack Yards"]}</p>` +
+     `<p style="margin-bottom: 0px;"><b>Fumbles forced per Game: </b>${query["Overall"]["Fumbles forced per Game"]}</p>` +
+     `<p style="margin-bottom: 0px;"><b>Total Fumbles forced: </b>${query["Overall"]["Total Fumbles forced"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>Passes Broken per Game: </b>${query["Overall"]["Passes Broken per Game"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>Total Passes broken: </b>${query["Overall"]["Total Passes broken"]}</p>` +
+     `<p style="margin-bottom: 0px;"><b>Kick/Punt Blocked: </b>${query["Overall"]["Kick/Punt Blocked"]}</p>` +
+     `<p style="margin-bottom: 0px;"><b>Total Kick/Punts Blocked: </b>${query["Overall"]["Total Kick/Punts Blocked"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>QB Hurries per Game: </b>${query["Overall"]["QB Hurries per Game"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>Total QB Hurries: </b>${query["Overall"]["Total QB Hurries"]}</p>` +
      `<p style="margin-bottom: 0px;"><b>Tackles per Game: </b>${query["Overall"]["Tackles per Game"]}</p>` +

@@ -1,1 +1,1 @@
-var query = {};
+var query = [{"Position":"DL","First Name":"Johnny","id":"51987","Last Name":"Jolly","Home State":"N/A","Home Town":"N/A","Home Country":"N/A"},{"Position":"QB","First Name":"Johnny","id":"1041700","Last Name":"Manziel","Home State":"TX","Home Town":"Kerrville","Home Country":"US"}];

@@ -12,5 +12,6 @@
     <orderEntry type="library" exported="" name="java-json" level="project" />
     <orderEntry type="library" exported="" name="postgresql-42.2.10" level="project" />
     <orderEntry type="library" exported="" name="javafx" level="application" />
+    <orderEntry type="library" exported="" name="jgrapht-bundle-1.4.0" level="project" />
   </component>
 </module>

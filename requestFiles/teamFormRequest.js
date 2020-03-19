@@ -1,1 +1,1 @@
-var query = {};
+var query = [{"Team Name":"Texas A&M","subdivision":"FBS","Conference Name":"Big 12 Conference","id":"697"}];

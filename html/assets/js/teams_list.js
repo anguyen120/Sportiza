@@ -12,10 +12,8 @@ $(document).ready(function(){
     $('#table').DataTable().destroy();
 
     $('#table').on('click', 'a.team_select', function () {
-        window.javaConnector.playerStatsRequest(table.row($(this).closest('tr')).data().id,
-            table.row($(this).closest('tr')).data()["Team Name"],
-            table.row($(this).closest('tr')).data()["subdivision"],
-            table.row($(this).closest('tr')).data()["Conference Name"]
+        window.javaConnector.teamGameStatsRequest(table.row($(this).closest('tr')).data().id,
+            table.row($(this).closest('tr')).data()["Team Name"]
         );
     } );
 
