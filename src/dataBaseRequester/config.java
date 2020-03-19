@@ -8,4 +8,5 @@ public class config {
     public static String teamFormRequest = "requestFiles/teamFormRequest.js";
     public static String shortestVictoryChain = "requestFiles/shortestVictoryChain.js";
     public static String teamStatsRequestFile = "requestFiles/teamStatsRequest.js";
+    public static  String homeTownStatsRanks = "requestFiles/homeTownsWithMostStats.js";
 }

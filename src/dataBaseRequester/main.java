@@ -32,7 +32,10 @@ public class main {
         //Parameters : source Team ID, target Team ID
         connector.shortestVictoryChainRequest("697","5");
 
-
+        //determines Home Towns with most different stats
+        connector.homeTownsWithMostStats();
+        //connector.hometownsWithMostPositions("QB");
+        //connector.hometownsWithMostPlayers();
         //System.out.println(connector.getTeamActiveSeasons("697"));
         //System.out.println(connector.getConferenceName("697","2013"));
 

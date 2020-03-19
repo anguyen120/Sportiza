@@ -736,4 +736,112 @@ public class connectorPostgres {
         }
         return mostStatsObject;
     }
+    private JSONArray hometownsWithMostPositions(String position){
+        String query = "SELECT COUNT(*) as \"Player Count\", \"Home Town\"\n" +
+                "    FROM\n" +
+                "         (SELECT DISTINCT ON(\"id\") * FROM players WHERE \"Home Town\" IS NOT NULL ) AS Players\n" +
+                "            WHERE \"Position\" = '%1$s' GROUP BY \"Home Town\" ORDER BY \"Player Count\" DESC LIMIT 3;";
+        query = String.format(query,position);
+        JSONArray mostPosition = new JSONArray();
+        ResultSet response = this.executeQuery(query);
+        try {
+            int rank = 1;
+            while(response.next()){
+                JSONObject homeTownObject = new JSONObject();
+                String HomeTown = response.getString("Home Town");
+                String playerCount = response.getString("Player Count");
+                //SportizaPrint("Home Town: " + HomeTown + ", Player Count: " + playerCount + ", Rank: " + rank);
+                homeTownObject.put("Home Town",HomeTown);
+                homeTownObject.put("Player Count", playerCount);
+                homeTownObject.put("Rank", rank);
+                mostPosition.put(homeTownObject);
+                rank++;
+            }
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+        }
+        return mostPosition;
+    }
+    private JSONArray homeTownWithMostStats(String statName){
+        String query = "SELECT SUM(\"%1$s\") AS StatSum,\"Home Town\" FROM\n" +
+                "        (SELECT DISTINCT ON(\"id\") id, \"Home Town\" FROM players WHERE \"Home Town\" IS NOT NULL )\n" +
+                "            AS Players JOIN \"Player Game Stats\" ON Players.\"id\"  = \"Player Code\" GROUP BY \"Home Town\" ORDER BY StatSum DESC LIMIT 3;";
+        query = String.format(query,statName);
+        //SportizaPrint(query);
+        JSONArray teamsWithMostStat = new JSONArray();
+        ResultSet response = this.executeQuery(query);
+        try {
+            int rank = 1;
+            while (response.next()){
+                JSONObject homeTownObject = new JSONObject();
+                String HomeTown = response.getString("Home Town");
+                String StatSum = response.getString("StatSum");
+                //SportizaPrint("Home Town: " + HomeTown + ", Player Count: " +statName + ": " + StatSum + ", Rank: " + rank);
+                homeTownObject.put("Home Town",HomeTown);
+                homeTownObject.put(statName, StatSum);
+                homeTownObject.put("Rank", rank);
+                teamsWithMostStat.put(homeTownObject);
+                rank++;
+
+            }
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return teamsWithMostStat;
+    }
+    private JSONArray hometownsWithMostPlayers(){
+        String query = "SELECT COUNT(*) as \"Player Count\",\"Home Town\" FROM (SELECT DISTINCT ON(\"id\") * FROM players WHERE \"Home Town\" IS NOT NULL ) AS Players GROUP BY  \"Home Town\" ORDER BY \"Player Count\" DESC  LIMIT 3;";
+        JSONArray MostPlayersTowns = new JSONArray();
+        ResultSet response = this.executeQuery(query);
+        try {
+            int rank = 1;
+            while(response.next()){
+                JSONObject homeTownMost = new JSONObject();
+                String HomeTownName = response.getString("Home Town");
+                String playerNum = response.getString("Player Count");
+                homeTownMost.put("Home Town", HomeTownName);
+                homeTownMost.put("Player Count", playerNum);
+                homeTownMost.put("Rank", rank);
+                MostPlayersTowns.put(homeTownMost);
+                //SportizaPrint("Home Town: " + HomeTownName + ", Player Count: " + playerNum + ", Rank: " + Integer.toString(rank ));
+                rank++;
+
+            }
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+        }
+        return MostPlayersTowns;
+
+    }
+    //determines all top 3  home twons with most ststs such as player positions, player stats, and Number of Players coming from Home Towns
+    void homeTownsWithMostStats(){
+        ArrayList<String> playerPositions = new ArrayList<>(Arrays.asList("ATH","C","CB","DB","DE","DL","DS","DT","FB","FL","FS","HB","HOLD","ILB","K","LB","LS","MLB","NG","NT","OG","OL","OLB","OT","P","PK","QB","RB","ROV","RV","S","SB","SE","SLB","SN","SS","TB","TE","WLB","WR"));
+        ArrayList<String> statNames= new ArrayList<String>(Arrays.asList("Pass Yard","Rush Yard", "Pass TD", "Rush TD", "Points","Sack","Safety", "Field Goal Made"));
+        try {
+
+            FileWriter jsonFile = new FileWriter(config.homeTownStatsRanks);
+            JSONObject fileObject = new JSONObject();
+            //Adding all objects of most players for a Home
+            fileObject.put("Most Players",this.hometownsWithMostPlayers());
+            //Adding all different top home town with most players
+            for(String position : playerPositions){
+                fileObject.put("HomeTowns Most Position " + position, this.hometownsWithMostPositions(position));
+            }
+            //Adding all most STats Home towns
+            for(String statName: statNames){
+                fileObject.put("HomeTowns Most Stats " + statName ,this.homeTownWithMostStats(statName));
+            }
+            jsonFile.write("var query = ");
+            jsonFile.write(fileObject.toString());
+            jsonFile.write(";");
+            jsonFile.close();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        //Adding all objects of most players for a Home
+
+    }
+
+
 }
