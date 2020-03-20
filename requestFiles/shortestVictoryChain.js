@@ -1,1 +1,1 @@
-var graphData = {"nodes":[{"size":3,"id":"697","label":"Texas A&M"},{"size":3,"id":"51","label":"Baylor"}],"edges":[{"id":"697-2009-51","source":"697","type":"arrow","target":"51"}]};
+var graphData = {};
