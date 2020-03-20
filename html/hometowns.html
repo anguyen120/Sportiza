@@ -10,6 +10,10 @@
     <meta charset="utf-8"/>
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport"/>
     <link href="assets/css/main.css" rel="stylesheet"/>
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css" rel="stylesheet" type="text/css">
+    <script charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"
+            type="text/javascript"></script>
     <noscript>
         <link href="assets/css/noscript.css" rel="stylesheet"/>
     </noscript>
@@ -35,83 +39,21 @@
 
     <!-- Overview -->
     <section class="wrapper style1 align-left fullscreen">
-        <div class="inner medium">
-            <h2>HOMETOWNS</h2>
-            <div class="items style1 align-center medium onscroll-fade-in">
-                <section>
-                    <p><b>Lorem</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Ipsum</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Dolor</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Amet</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Magna</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Tempus</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Aliquam</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Elit</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Morbi</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Turpis</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Ultrices</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-                <section>
-                    <p><b>Risus</b></p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi dui turpis, cursus eget orci amet
-                        aliquam congue semper. Etiam eget ultrices risus nec tempor elit.</p>
-                </section>
-            </div>
-        </div>
+        <div class="inner medium" id="render"></div>
     </section>
 </div>
 
 
 <!-- Scripts -->
-<script src="assets/js/jquery.min.js"></script>
 <script src="assets/js/jquery.scrollex.min.js"></script>
 <script src="assets/js/jquery.scrolly.min.js"></script>
 <script src="assets/js/browser.min.js"></script>
 <script src="assets/js/breakpoints.min.js"></script>
 <script src="assets/js/util.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/const.js"></script>
+<script src="../requestFiles/homeTownsWithMostStats.js"></script>
+<script src="assets/js/hometowns.js"></script>
 
 </body>
 </html>
