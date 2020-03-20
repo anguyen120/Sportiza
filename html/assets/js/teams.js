@@ -206,25 +206,10 @@ $(document).ready(function() {
     `<canvas id="overall_yards_render"></canvas>` +
     `</div>` +
     `</section>` +
-    `<h4>VICTORY CHAIN</h4>` +
-    `<form action="victory_chain.html" id="victory_chain">` +
-    `<div class="fields">` +
-    `<div class="field third">` +
-    `<label for="team" style="margin-bottom: 0px;">Team</label>` +
-    `<input id="team" name="team" type="text" value="">` +
-    `</div>` +
-    `<div class="field third">` +
-    `<label for="" style="margin-bottom: 0px; visibility: hidden;">hidden</label>` +
-    `<ul class="actions">` +
-    `<li><input id="submit" name="submit" type="submit" value="Submit"/></li>` +
-    `</ul>` +
-    `</div>` +
-    `</div>` +
-    `</form>` +
     `<section class="wrapper style1 align-left fullscreen">` +
     `<div class="inner medium" style="padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;">` +
     `<section>` +
-    `<h4>OPPOSING TEAMS STAT</h4>` +
+    `<h4 style="margin-bottom: 0px;">OPPOSING TEAMS STAT</h4>` +
     `<form action="" id="opposing_teams">` +
     `<div class="fields">` +
     `<div class="field third">` +
@@ -250,6 +235,21 @@ $(document).ready(function() {
     `</div>` +
     `</section>` +
     `<div id="option_table"></div>` +
+    `<h4 style="margin-bottom: 0px;">VICTORY CHAIN</h4>` +
+    `<form action="victory_chain.html" id="victory_chain">` +
+    `<div class="fields">` +
+    `<div class="field third">` +
+    `<label for="team" style="margin-bottom: 0px;">Team</label>` +
+    `<input id="team" name="team" type="text" value="">` +
+    `</div>` +
+    `<div class="field third">` +
+    `<label for="" style="margin-bottom: 0px; visibility: hidden;">hidden</label>` +
+    `<ul class="actions">` +
+    `<li><input id="submit" name="submit" type="submit" value="Submit"/></li>` +
+    `</ul>` +
+    `</div>` +
+    `</div>` +
+    `</form>` +
     `<div class="accordion_container">`
   ;
 
@@ -373,6 +373,10 @@ $(document).ready(function() {
 
     var table = $('#table').DataTable( {
         data: teamStatsData[option],
+        "paging": false,
+        "ordering": false,
+        "info": false,
+        "searching": false,
         "columns": [
             { "data": "rank" },
             { "data": "Team Name" },
