@@ -206,6 +206,21 @@ $(document).ready(function() {
     `<canvas id="overall_yards_render"></canvas>` +
     `</div>` +
     `</section>` +
+    `<h4>VICTORY CHAIN</h4>` +
+    `<form action="victory_chain.html" id="victory_chain">` +
+    `<div class="fields">` +
+    `<div class="field third">` +
+    `<label for="team" style="margin-bottom: 0px;">Team</label>` +
+    `<input id="team" name="team" type="text" value="">` +
+    `</div>` +
+    `<div class="field third">` +
+    `<label for="" style="margin-bottom: 0px; visibility: hidden;">hidden</label>` +
+    `<ul class="actions">` +
+    `<li><input id="submit" name="submit" type="submit" value="Submit"/></li>` +
+    `</ul>` +
+    `</div>` +
+    `</div>` +
+    `</form>` +
     `<section class="wrapper style1 align-left fullscreen">` +
     `<div class="inner medium" style="padding-left: 0px;padding-right: 0px;padding-top: 0px;padding-bottom: 0px;">` +
     `<section>` +
@@ -235,21 +250,6 @@ $(document).ready(function() {
     `</div>` +
     `</section>` +
     `<div id="option_table"></div>` +
-    `<h4>VICTORY CHAIN</h4>` +
-    `<form action="victory_chain.html" id="victory_chain">` +
-    `<div class="fields">` +
-    `<div class="field third">` +
-    `<label for="team" style="margin-bottom: 0px;">Team</label>` +
-    `<input id="team" name="team" type="text" value="">` +
-    `</div>` +
-    `<div class="field third">` +
-    `<label for="" style="margin-bottom: 0px; visibility: hidden;">hidden</label>` +
-    `<ul class="actions">` +
-    `<li><input id="submit" name="submit" type="submit" value="Submit"/></li>` +
-    `</ul>` +
-    `</div>` +
-    `</div>` +
-    `</form>` +
     `<div class="accordion_container">`
   ;
 
