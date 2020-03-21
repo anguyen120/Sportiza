@@ -817,7 +817,7 @@ public class connectorPostgres {
     //determines all top 3  home twons with most ststs such as player positions, player stats, and Number of Players coming from Home Towns
     void homeTownsWithMostStats(){
         ArrayList<String> playerPositions = new ArrayList<>(Arrays.asList("ATH","C","CB","DB","DE","DL","DS","DT","FB","FL","FS","HB","HOLD","ILB","K","LB","LS","MLB","NG","NT","OG","OL","OLB","OT","P","PK","QB","RB","ROV","RV","S","SB","SE","SLB","SN","SS","TB","TE","WLB","WR"));
-        ArrayList<String> statNames= new ArrayList<String>(Arrays.asList("Pass Yard","Rush Yard", "Pass TD", "Rush TD", "Points","Sack","Safety", "Field Goal Made"));
+        ArrayList<String> statNames= new ArrayList<String>(Arrays.asList("Pass Yard","Rush Yard", "Pass TD", "Rush TD", "Points","Sack", "Field Goal Made"));
         try {
 
             FileWriter jsonFile = new FileWriter(config.homeTownStatsRanks);
