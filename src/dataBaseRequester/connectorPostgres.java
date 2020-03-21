@@ -711,7 +711,7 @@ public class connectorPostgres {
                 "    FROM\n" +
                 "         (SELECT \"id\",\"season\" FROM \"games Copy\" WHERE \"Winning Team\" = %1$s or \"Defeated Team\" = %1$s) as allGames\n" +
                 "             INNER\n" +
-                "                     JOIN \"Game Team Stats\" GTS ON allGames.id = GTS.\"Game Code\" WHERE \"Team Code\" != %1$s ORDER BY \"Rush Yard\" DESC LIMIT 3;";
+                "                     JOIN \"Game Team Stats\" GTS ON allGames.id = GTS.\"Game Code\" WHERE \"Team Code\" != %1$s ORDER BY \"%2$s\" DESC LIMIT 3;";
         statQuery = String.format(statQuery,targetTeamID,statName);
         //SportizaPrint(statQuery);
         ResultSet mostStatsResp = this.executeQuery(statQuery);
@@ -841,7 +841,7 @@ public class connectorPostgres {
         }
         //Adding all objects of most players for a Home
 
-    }
+    }   
 
 
 }
