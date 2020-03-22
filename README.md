@@ -1,3 +1,4 @@
+
 <!-- PROJECT SHIELDS -->
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -37,6 +38,18 @@
 The project focuses on developing an application for use in an introductory statistics course for Texas A&M University (TAMU)’s Sport’s Management department. The application should allow students to use different filters for players. A PostgreSQL database holds the current college football data. A graphical user interface interacts with the database and the user’s query parameters.
 
 ![Product Name Screen Shot][product-screenshot]
+* Notable Features:
+	* Given two teams, create a victory chain. Find a chain that gives you bragging rights of how the first team is better than the second team.  
+	* Given a team, find the team with the most rushing yards vs. the given team.
+	* Given a team or player, users are able to view various stats from each season or overall.
+	* Find the hometown that gives (user choice):
+		* Most players
+		* Most winners
+		* Most rushing yards,
+		* Most receivers,
+		* Most punters,
+		*  Etc.
+
 
 ### Built With
 
