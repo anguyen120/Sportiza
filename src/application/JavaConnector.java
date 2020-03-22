@@ -38,24 +38,24 @@ public class JavaConnector {
   public void playerFormRequest(String FirstName, String LastName, String Team, String UniformNumber, String HomeTown) {
     // Formating strings inputs for SQL command
     if (!FirstName.equals("NULL")) {
-      FirstName = FirstName.replace("\'", "\'\'");
-      FirstName = String.format("\'%s\'", FirstName);
+      FirstName = FirstName.replace("'", "''");
+      FirstName = String.format("'%s'", FirstName);
     }
     if (!LastName.equals("NULL")) {
-      LastName = LastName.replace("\'", "\'\'");
-      LastName = String.format("\'%s\'", LastName);
+      LastName = LastName.replace("'", "''");
+      LastName = String.format("'%s'", LastName);
     }
     if (!Team.equals("NULL")) {
-      Team = Team.replace("\'", "\'\'");
-      Team = String.format("\'%s\'", Team);
+      Team = Team.replace("'", "''");
+      Team = String.format("'%s'", Team);
     }
     if (!UniformNumber.equals("NULL")) {
-      UniformNumber = UniformNumber.replace("\'", "\'\'");
-      UniformNumber = String.format("\'%s\'", UniformNumber);
+      UniformNumber = UniformNumber.replace("'", "''");
+      UniformNumber = String.format("'%s'", UniformNumber);
     }
     if (!HomeTown.equals("NULL")) {
-      HomeTown = HomeTown.replace("\'", "\'\'");
-      HomeTown = String.format("\'%s\'", HomeTown);
+      HomeTown = HomeTown.replace("'", "''");
+      HomeTown = String.format("'%s'", HomeTown);
     }
     //base query format
     String query = "SELECT DISTINCT ON (playerChosen.\"id\") playerChosen.\"id\", \"First Name\",\"Last Name\",\"Home Town\",\"Home Country\",\"Home State\",\"Position\", \"name\" FROM  (SELECT DISTINCT ON (\"players\".\"id\")  \"players\".\"id\",\"players\".\"First Name\", \"players\".\"Last Name\",\"players\".\"Position\", \"players\".\"Home Town\", \"players\".\"Home State\", \"players\".\"Home Country\",\"players\".\"Team Code\"\n" +
@@ -244,16 +244,16 @@ public class JavaConnector {
   public void teamFormRequest(String teamName, String conferenceName, String subdivision) {
     // Formatting strings inputs for SQL command
     if (!teamName.equals("NULL")) {
-      teamName = teamName.replace("\'", "\'\'");
-      teamName = String.format("\'%s\'", teamName);
+      teamName = teamName.replace("'", "''");
+      teamName = String.format("'%s'", teamName);
     }
     if (!conferenceName.equals("NULL")) {
-      conferenceName = conferenceName.replace("\'", "\'\'");
-      conferenceName = String.format("\'%s\'", conferenceName);
+      conferenceName = conferenceName.replace("'", "''");
+      conferenceName = String.format("'%s'", conferenceName);
     }
     if (!subdivision.equals("NULL")) {
-      subdivision = subdivision.replace("\'", "\'\'");
-      subdivision = String.format("\'%s\'", subdivision);
+      subdivision = subdivision.replace("'", "''");
+      subdivision = String.format("'%s'", subdivision);
     }
     // Query to get all teams formed by query
     String teamFormQuery = "SELECT DISTINCT ON (t.id) conf.\"name\" as \"Conference Name\", t.name as \"Team Name\", conf.subdivision,t.id\n" +
@@ -584,7 +584,7 @@ public class JavaConnector {
       JSONObject edgeObject = new JSONObject();
       String sourceNode = e.getWinningTeam();
       String targetNode = e.getDefeatedTeam();
-      String edgeID = e.getWinningTeam() + "-" + Integer.toString(e.season()) + "-" + e.getDefeatedTeam();
+      String edgeID = e.getWinningTeam() + "-" + e.season() + "-" + e.getDefeatedTeam();
       String label = Integer.toString(e.season());
       try {
         edgeObject.put("id", edgeID);
@@ -678,7 +678,7 @@ public class JavaConnector {
             "    FROM\n" +
             "         (SELECT \"id\",\"season\" FROM \"games Copy\" WHERE \"Winning Team\" = %1$s or \"Defeated Team\" = %1$s) as allGames\n" +
             "             INNER\n" +
-            "                     JOIN \"Game Team Stats\" GTS ON allGames.id = GTS.\"Game Code\" WHERE \"Team Code\" != %1$s ORDER BY \"Rush Yard\" DESC LIMIT 3;";
+            "                     JOIN \"Game Team Stats\" GTS ON allGames.id = GTS.\"Game Code\" WHERE \"Team Code\" != %1$s ORDER BY \"%2$s\" DESC LIMIT 3;";
     statQuery = String.format(statQuery, targetTeamID, statName);
     ResultSet mostStatsResp = this.executeQuery(statQuery);
     JSONArray mostStatsObject = new JSONArray();
