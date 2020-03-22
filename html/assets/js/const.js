@@ -48,7 +48,6 @@ const stats = [
     "Rush TD",
     "Points",
     "Sack",
-    "Safety",
     "Field Goal Made"
 ];
 
