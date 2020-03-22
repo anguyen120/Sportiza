@@ -25,6 +25,7 @@
 ## Table of Contents
 
 * [About the Project](#about-the-project)
+  * [Notable Features](#notable-features)
   * [Built With](#built-with)
 * [Getting Started](#getting-started)
   * [Installation](#installation)
@@ -39,7 +40,7 @@ The project focuses on developing an application for use in an introductory stat
 
 ![Product Name Screen Shot][product-screenshot]
 
-### Notable Features:
+### Notable Features
 * Given two teams, create a victory chain. Find a chain that gives you bragging rights of how the first team is better than the second team.  
 * Given a team, find the team with the most rushing yards vs. the given team.
 * Given a team or player, users are able to view various stats from each season or overall.
